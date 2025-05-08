@@ -1,2 +1,0 @@
-# CheckNews-PHP
-FrontEnd-Back
