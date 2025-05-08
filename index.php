@@ -5,9 +5,9 @@ session_start();
 
 // Decide adónde redirigir
 if (isset($_SESSION['usuarioID'])) {
-    $target = 'Principal.php';
+    $target = 'templets/Principal.php';
 } else {
-    $target = 'login.php';
+    $target = 'templets/login.php';
 }
 
 // Si el archivo no existe, manda un 404
