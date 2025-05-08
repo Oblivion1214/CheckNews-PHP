@@ -2,50 +2,63 @@
 include 'config.php';
 session_start();
 
-$mensaje = ""; // Para mostrar mensajes de error
+$mensaje = ""; // Mensaje para el usuario
+
+// Inicializar intento de sesión fallida si no existe
+if (!isset($_SESSION['intentos_login'])) {
+    $_SESSION['intentos_login'] = 0;
+}
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $correo = $_POST['Correo'];
-    $contrasena = $_POST['Contrasena'];
+    $correo = trim($_POST['Correo'] ?? '');
+    $contrasena = trim($_POST['Contrasena'] ?? '');
 
-    // Validar campos vacíos
     if (empty($correo) || empty($contrasena)) {
         $mensaje = "Por favor, complete todos los campos.";
     } else {
-        // Consulta para verificar si el correo existe en la base de datos
-        $sql = "SELECT * FROM usuarios WHERE email = ?";
-        $stmt = $conn->prepare($sql);
-        
-        if ($stmt === false) {
-            die("Error al preparar la consulta: " . $conn->error);
-        }
-
-        $stmt->bind_param("s", $correo);
-        $stmt->execute();
-        $resultado = $stmt->get_result();
-
-        // Verificar si se encontró un usuario con el correo proporcionado
-        if ($resultado->num_rows > 0) {
-            $usuario = $resultado->fetch_assoc();
-
-            // Verificar si la contraseña es correcta
-            if (password_verify($contrasena, $usuario['password'])) {
-                // Iniciar sesión
-                $_SESSION['usuarioID'] = $usuario['id'];
-                $_SESSION['correo'] = $usuario['email'];
-                
-                // Redirigir a la página de productos
-                header("Location: Principal.php");
-                exit;
-            } else {
-                $mensaje = "Contraseña incorrecta.";
-            }
+        if ($_SESSION['intentos_login'] >= 10) {
+            $mensaje = "Demasiados intentos fallidos. Intente más tarde.";
         } else {
-            $mensaje = "El usuario o correo no existe.";
+            $sql = "SELECT * FROM usuarios WHERE email = ?";
+            $stmt = $conn->prepare($sql);
+
+            if ($stmt === false) {
+                die("Error al preparar la consulta: " . $conn->error);
+            }
+
+            $stmt->bind_param("s", $correo);
+            $stmt->execute();
+            $resultado = $stmt->get_result();
+
+            if ($resultado->num_rows > 0) {
+                $usuario = $resultado->fetch_assoc();
+
+                // Verificar contraseña
+                if (password_verify($contrasena, $usuario['password'])) {
+                    // Reiniciar contador de intentos
+                    $_SESSION['intentos_login'] = 0;
+
+                    $_SESSION['usuarioID'] = $usuario['id'];
+                    $_SESSION['correo'] = $usuario['email'];
+
+                    header("Location: Principal.php");
+                    exit;
+                } else {
+                    $_SESSION['intentos_login']++;
+                    $mensaje = "Correo o contraseña incorrectos.";
+                }
+            } else {
+                $_SESSION['intentos_login']++;
+                $mensaje = "Correo o contraseña incorrectos.";
+            }
+
+            $stmt->close();
         }
     }
 }
 ?>
+
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
