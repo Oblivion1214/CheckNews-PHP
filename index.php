@@ -1,7 +1,6 @@
 <?php
 // Usa /tmp para sesiones en entornos restringidos (como Railway)
 session_save_path(sys_get_temp_dir());
-session_start();
 
 // Rutas destino
 $target = isset($_SESSION['usuarioID']) ? 'views/Principal.php' : 'views/login.php';
