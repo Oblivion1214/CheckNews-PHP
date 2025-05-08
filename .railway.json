@@ -1,0 +1,11 @@
+{
+    "build": {
+      "nixpacks": {
+        "config": {
+          "phpExtensions": ["mysqli", "pdo_mysql"],
+          "webServer": "nginx",
+          "startCommand": "php-fpm -y /etc/php/php-fpm.conf && nginx -c /etc/nginx/nginx.conf"
+        }
+      }
+    }
+  }
