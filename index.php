@@ -4,7 +4,7 @@ session_save_path(sys_get_temp_dir());
 session_start();
 
 // Rutas destino
-$target = isset($_SESSION['usuarioID']) ? 'templets/Principal.php' : 'templets/login.php';
+$target = isset($_SESSION['usuarioID']) ? 'views/Principal.php' : 'views/login.php';
 $fullPath = __DIR__ . '/' . $target;
 
 // Verifica existencia del archivo
