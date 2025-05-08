@@ -1,6 +1,5 @@
 <?php
 include 'config.php';
-session_start();
 
 $mensaje = ""; // Mensaje para el usuario
 
