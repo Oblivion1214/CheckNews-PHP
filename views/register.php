@@ -24,7 +24,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Verificar si el correo ya está registrado
     $sqlUsuario = "SELECT * FROM usuarios WHERE email = ?";
-    $stmt = $conn->prepare($sqlUsuario);
+    $stmt = $connection->prepare($sqlUsuario);
     
     if ($stmt === false) {
         die("Error al preparar la consulta: " . $conn->error);

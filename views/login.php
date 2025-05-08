@@ -1,6 +1,5 @@
 <?php
 include 'config.php';
-session_start();
 
 $mensaje = ""; // Mensaje para el usuario
 
@@ -20,10 +19,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $mensaje = "Demasiados intentos fallidos. Intente más tarde.";
         } else {
             $sql = "SELECT * FROM usuarios WHERE email = ?";
-            $stmt = $conn->prepare($sql);
+            $stmt = $connection->prepare($sql);
 
             if ($stmt === false) {
-                die("Error al preparar la consulta: " . $conn->error);
+                die("Error al preparar la consulta: " . $connection->error);
             }
 
             $stmt->bind_param("s", $correo);
