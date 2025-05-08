@@ -1,0 +1,10 @@
+{
+    "build": {
+    "nixpacks": {
+        "config": {
+        "phpExtensions": ["mysqli", "pdo_mysql"],
+        "webServer": "php_apache"
+        }
+    }
+    }
+}
