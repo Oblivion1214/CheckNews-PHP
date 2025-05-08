@@ -27,7 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt = $connection->prepare($sqlUsuario);
     
     if ($stmt === false) {
-        die("Error al preparar la consulta: " . $conn->error);
+        die("Error al preparar la consulta: " . $connection->error);
     }
     
     $stmt->bind_param("s", $email);
@@ -44,10 +44,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         
         $sqlInsert = "INSERT INTO usuarios (nombre, apellido_paterno, apellido_materno, email, password, tipo_usuario) 
                     VALUES (?, ?, ?, ?, ?, 'normal')";
-        $stmt = $conn->prepare($sqlInsert);
+        $stmt = $connection->prepare($sqlInsert);
         
         if ($stmt === false) {
-            die("Error al preparar la consulta: " . $conn->error);
+            die("Error al preparar la consulta: " . $connection->error);
         }
         
         $stmt->bind_param("sssss", $nombre, $apellido_paterno, $apellido_materno, $email, $hashedPassword);
