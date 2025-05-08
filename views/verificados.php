@@ -11,7 +11,7 @@ if (!isset($_SESSION['usuarioID'])) {
 // Obtener información del usuario desde la base de datos
 $user_id = $_SESSION['usuarioID'];
 $sql = "SELECT nombre, apellido_paterno, tipo_usuario FROM usuarios WHERE id = ?";
-$stmt = $conn->prepare($sql);
+$stmt = $connection->prepare($sql);
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -29,7 +29,7 @@ if ($result->num_rows > 0) {
 
 // Consulta para obtener noticias verificadas
 $sql_noticias = "SELECT * FROM noticias_verificadas ORDER BY fecha_publicacion DESC";
-$result_noticias = $conn->query($sql_noticias);
+$result_noticias = $connection->query($sql_noticias);
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -361,7 +361,7 @@ $result_noticias = $conn->query($sql_noticias);
                 $sql .= " ORDER BY fecha_publicacion DESC";
                 
                 // Ejecutar consulta
-                $stmt = $conn->prepare($sql);
+                $stmt = $connection->prepare($sql);
                 if ($params) {
                     $stmt->bind_param($types, ...$params);
                 }

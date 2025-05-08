@@ -11,7 +11,7 @@ if (!isset($_SESSION['usuarioID'])) {
 // Obtener información del usuario desde la base de datos
 $user_id = $_SESSION['usuarioID'];
 $sql = "SELECT nombre, apellido_paterno, tipo_usuario FROM usuarios WHERE id = ?";
-$stmt = $conn->prepare($sql);
+$stmt = $connection->prepare($sql);
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $result = $stmt->get_result();
