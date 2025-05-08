@@ -454,7 +454,7 @@ if ($result->num_rows > 0) {
             };
 
             // Enviar a la API Flask
-            fetch('http://localhost:5000/predict', {
+            fetch('https://checknews.onrender.com/predict', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
