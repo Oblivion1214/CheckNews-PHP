@@ -43,7 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $hashedPassword = password_hash($contrasena, PASSWORD_DEFAULT);
         
         $sqlInsert = "INSERT INTO usuarios (nombre, apellido_paterno, apellido_materno, email, password, tipo_usuario) 
-                      VALUES (?, ?, ?, ?, ?, 'normal')";
+                    VALUES (?, ?, ?, ?, ?, 'normal')";
         $stmt = $conn->prepare($sqlInsert);
         
         if ($stmt === false) {
