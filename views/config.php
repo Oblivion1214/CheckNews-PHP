@@ -1,5 +1,4 @@
 <?php
-session_start();
 // Configuración de la base de datos
 $DB_HOST = getenv("DB_HOST");
 $DB_USER = getenv("DB_USER");
