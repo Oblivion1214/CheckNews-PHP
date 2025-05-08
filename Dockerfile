@@ -1,14 +1,24 @@
-# Usa una imagen oficial con Apache + PHP
+# 1) Imagen base con Apache + PHP
 FROM php:8.2-apache
 
-# Habilita el módulo de reescritura si usas .htaccess (opcional)
+# 2) Instala extensiones de MySQL (si las necesitas)
+RUN docker-php-ext-install mysqli pdo pdo_mysql
+
+# 3) Habilita mod_rewrite (si usas .htaccess)
 RUN a2enmod rewrite
 
-# Copia los archivos de tu proyecto al directorio público de Apache
+# 4) Copia tu código al directorio público de Apache
 COPY . /var/www/html/
 
-# Establece permisos (opcional, si usas uploads o sesiones)
-RUN chown -R www-data:www-data /var/www/html
+# 5) Ajusta Apache para escuchar en el puerto $PORT
+#    - ports.conf define Listen 80
+#    - default-ssl.conf y 000-default.conf usan :80  
+# Note: Railway inyecta la variable de entorno PORT en el contenedor
+RUN sed -ri "s/Listen 80/Listen ${PORT}/g" /etc/apache2/ports.conf \
+&& sed -ri "s/:80/:${PORT}/g" /etc/apache2/sites-enabled/*.conf
 
-# Expone el puerto 80 (Apache)
-EXPOSE 80
+# 6) Expone el puerto dinámico (solo informativo)
+EXPOSE ${PORT}
+
+# 7) Arranca Apache en primer plano
+CMD ["apache2-foreground"]
