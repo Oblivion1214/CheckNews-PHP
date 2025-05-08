@@ -1,8 +1,14 @@
-# Imagen base con Apache + PHP 8.2
+# Usa una imagen oficial con Apache + PHP
 FROM php:8.2-apache
 
-# Copiar archivos del proyecto al directorio público de Apache
+# Habilita el módulo de reescritura si usas .htaccess (opcional)
+RUN a2enmod rewrite
+
+# Copia los archivos de tu proyecto al directorio público de Apache
 COPY . /var/www/html/
 
-# Habilitar mod_rewrite si usas .htaccess
-RUN a2enmod rewrite
+# Establece permisos (opcional, si usas uploads o sesiones)
+RUN chown -R www-data:www-data /var/www/html
+
+# Expone el puerto 80 (Apache)
+EXPOSE 80
