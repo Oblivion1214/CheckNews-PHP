@@ -1,9 +1,9 @@
 <?php
 session_start();
 if (isset($_SESSION['usuarioID'])) {
-    header("Location: Principal.php");
+    header("Location: templets\Principal.php.");
 } else {
-    header("Location: login.php");
+    header("Location: templets\login.php.");
 }
 exit();
 ?>
