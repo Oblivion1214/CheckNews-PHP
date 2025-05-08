@@ -8,14 +8,9 @@ $DB_NAME = $_ENV["DB_NAME"];
 $DB_PORT = $_ENV["DB_PORT"];
 
 // Conexión a la base de datos
-$conn = new mysqli("$DB_HOST", "$DB_USER", "$DB_PASSWORD", "$DB_NAME", "$DB_PORT");
-// Verificar la conexión
-if ($conn->connect_error) {
-    die("Error al conectar a MySQL: " . $conn->connect_error);
+$connection = mysqli_connect($DB_HOST, $DB_USER, $DB_PASSWORD, $DB_NAME, $DB_PORT);
+if (!$connection) {
+    die("Error de conexión: " . mysqli_connect_error());
 }
 
-
-if ($conn->connect_error) {
-    die("Conexión fallida: " . $conn->connect_error);
-}
 ?>
