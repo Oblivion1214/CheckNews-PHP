@@ -1,12 +1,8 @@
 <?php
 include 'config.php';
+session_start();
 
 $mensaje = ""; // Mensaje para el usuario
-
-// Inicializar intento de sesión fallida si no existe
-if (!isset($_SESSION['intentos_login'])) {
-    $_SESSION['intentos_login'] = 0;
-}
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $correo = trim($_POST['Correo'] ?? '');
@@ -15,47 +11,39 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (empty($correo) || empty($contrasena)) {
         $mensaje = "Por favor, complete todos los campos.";
     } else {
-        if ($_SESSION['intentos_login'] >= 10) {
-            $mensaje = "Demasiados intentos fallidos. Intente más tarde.";
-        } else {
-            $sql = "SELECT * FROM usuarios WHERE email = ?";
-            $stmt = $connection->prepare($sql);
+        $sql = "SELECT * FROM usuarios WHERE email = ?";
+        $stmt = $connection->prepare($sql);
 
-            if ($stmt === false) {
-                die("Error al preparar la consulta: " . $connection->error);
-            }
+        if (!$stmt) {
+            die("Error al preparar la consulta: " . $connection->error);
+        }
 
-            $stmt->bind_param("s", $correo);
-            $stmt->execute();
-            $resultado = $stmt->get_result();
+        $stmt->bind_param("s", $correo);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
 
-            if ($resultado->num_rows > 0) {
-                $usuario = $resultado->fetch_assoc();
+        if ($resultado->num_rows > 0) {
+            $usuario = $resultado->fetch_assoc();
 
-                // Verificar contraseña
-                if (password_verify($contrasena, $usuario['password'])) {
-                    // Reiniciar contador de intentos
-                    $_SESSION['intentos_login'] = 0;
+            if (password_verify($contrasena, $usuario['password'])) {
+                session_start(); // Asegúrate de iniciar la sesión
+                $_SESSION['usuarioID'] = $usuario['id'];
+                $_SESSION['correo'] = $usuario['email'];
 
-                    $_SESSION['usuarioID'] = $usuario['id'];
-                    $_SESSION['correo'] = $usuario['email'];
-
-                    header("Location: views/Principal.php");
-                    exit;
-                } else {
-                    $_SESSION['intentos_login']++;
-                    $mensaje = "Correo o contraseña incorrectos.";
-                }
+                header("Location: Principal.php");
+                exit;
             } else {
-                $_SESSION['intentos_login']++;
                 $mensaje = "Correo o contraseña incorrectos.";
             }
-
-            $stmt->close();
+        } else {
+            $mensaje = "Correo o contraseña incorrectos.";
         }
+
+        $stmt->close();
     }
 }
 ?>
+
 
 
 <!DOCTYPE html>
