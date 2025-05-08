@@ -40,7 +40,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $_SESSION['usuarioID'] = $usuario['id'];
                     $_SESSION['correo'] = $usuario['email'];
 
-                    header("Location: Principal.php");
+                    header("Location: views/Principal.php");
                     exit;
                 } else {
                     $_SESSION['intentos_login']++;
