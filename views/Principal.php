@@ -327,6 +327,13 @@ if ($result->num_rows > 0) {
             display: inline-block;
         }
 
+        .confidence-explanation {
+            font-size: 14px;
+            color: #555;
+            font-style: italic;
+        }
+
+
         .toggle-text:hover {
             text-decoration: underline;
         }
@@ -402,6 +409,11 @@ if ($result->num_rows > 0) {
                     Confianza: <span id="confidenceValue">0</span>%
                 </div>
             </div>
+
+            <div id="confidenceExplanationContainer" style="margin-top: 1rem;">
+                <p><strong>Explicación de confianza:</strong> <span id="confidenceExplanation"></span></p>
+            </div>
+
             
             <div id="resultUrlContainer" style="display: none;">
                 <p><strong>URL analizada:</strong> <a id="resultUrl" class="result-url" target="_blank"></a></p>
@@ -518,6 +530,22 @@ if ($result->num_rows > 0) {
                 } else {
                     confidenceBadge.className = 'confidence-badge low';
                 }
+
+                // Explicación de confianza
+                const confidenceExplanation = document.getElementById('confidenceExplanation');
+                let explanationText = '';
+
+                if (confidence >= 70) {
+                    explanationText = 'El sistema tiene una alta confianza en su predicción, lo que indica una alta probabilidad de que la clasificación sea correcta.';
+                } else if (confidence >= 40) {
+                    explanationText = 'El sistema tiene una confianza moderada en su predicción. Se recomienda revisar la fuente de la noticia para mayor seguridad.';
+                } else {
+                    explanationText = 'La predicción fue realizada con baja confianza, por lo tanto, se recomienda precaución y verificación adicional.';
+                }
+
+                confidenceExplanation.textContent = explanationText;
+                confidenceExplanation.style.display = 'block';
+
 
                 // Mostrar URL si existe
                 if (url) {
