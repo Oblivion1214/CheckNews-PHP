@@ -397,11 +397,13 @@ if ($result->num_rows > 0) {
                 <h2 id="resultTitle" class="result-title">Resultado de la Verificación</h2>
             </div>
             
+            <!-- Resultados de verificación 
             <div class="result-meta">
                 <div id="confidenceBadge" class="confidence-badge">
                     Confianza: <span id="confidenceValue">0</span>%
                 </div>
             </div>
+            -->
             
             <div id="resultUrlContainer" style="display: none;">
                 <p><strong>URL analizada:</strong> <a id="resultUrl" class="result-url" target="_blank"></a></p>
