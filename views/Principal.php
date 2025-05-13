@@ -364,7 +364,7 @@ if ($result->num_rows > 0) {
     <!-- Barra lateral -->
     <div class="sidebar">
         <div class="logo-container">
-            <img src="templets/CheckNews.png" alt="Logo">
+            <img src="views/CheckNews.png" alt="Logo">
             <h2>Check News</h2>
         </div>
         <ul>
