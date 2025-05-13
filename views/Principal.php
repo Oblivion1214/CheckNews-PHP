@@ -364,7 +364,7 @@ if ($result->num_rows > 0) {
     <!-- Barra lateral -->
     <div class="sidebar">
         <div class="logo-container">
-            <img src="views/CheckNews.png" alt="Logo">
+            <img src="CheckNews.png" alt="Logo">
             <h2>CheckNews</h2>
         </div>
         <ul>
@@ -406,7 +406,7 @@ if ($result->num_rows > 0) {
             
             <div class="result-meta">
                 <div id="confidenceBadge" class="confidence-badge">
-                    Confianza del : <span id="confidenceValue">0</span>% de que sea <span id="verificationResult"></span>
+                    Confianza del modelo: <span id="confidenceValue">0</span>% de que sea <span id="result-header"></span>
                 </div>
             </div>
 
