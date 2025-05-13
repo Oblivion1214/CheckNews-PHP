@@ -365,7 +365,7 @@ if ($result->num_rows > 0) {
     <div class="sidebar">
         <div class="logo-container">
             <img src="views/CheckNews.png" alt="Logo">
-            <h2>Check News</h2>
+            <h2>CheckNews</h2>
         </div>
         <ul>
             <li><a href="#"><i class="fas fa-compass"></i> Explorar</a></li>
