@@ -272,7 +272,7 @@ if ($result->num_rows > 0) {
     <div class="content">
         <div class="user-info">
             Bienvenido, <?php echo $nombre_completo; ?> 
-            (<a href="logout.php">Cerrar sesión</a>)
+            <a href="logout.php">Cerrar sesión</a>
         </div>
 
         <div class="form-container">
