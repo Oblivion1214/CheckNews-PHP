@@ -308,8 +308,8 @@ if ($result->num_rows > 0) {
                 <div class="form-group">
                     <label for="descripcion" class="form-label">¿Por qué crees que esta noticia es falsa o dudosa?</label>
                     <textarea id="descripcion" name="descripcion" class="form-control" required></textarea>
-                    <small class="text-muted">Mínimo 20 caracteres. Describe con detalle tus sospechas.</small>
                 </div>
+                <small class="text-muted">Mínimo 20 caracteres. Describe con detalle tus sospechas.</small>
 
                 <button type="submit" class="btn btn-primary">Reportar Noticia</button>
             </form>
