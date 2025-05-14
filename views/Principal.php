@@ -406,7 +406,7 @@ if ($result->num_rows > 0) {
             
             <div class="result-meta">
                 <div id="confidenceBadge" class="confidence-badge">
-                    Confianza del modelo: <span id="confidenceValue">0</span>% de que sea <span id="result-title"></span>
+                    Confianza del modelo: <span id="confidenceValue">0</span> de que sea <span id="result-header"></span>
                 </div>
             </div>
 
@@ -520,7 +520,7 @@ if ($result->num_rows > 0) {
                 }
 
                 // Establecer confianza
-                confidenceValue.textContent = confidence;
+                confidenceValue.textContent = `${confidence}%`;
                 
                 // Clasificar confianza
                 if (confidence >= 70) {
