@@ -427,10 +427,10 @@ if ($result->num_rows > 0) {
                 <span id="toggleText" class="toggle-text">Mostrar más</span>
             </div>
             <!-- Boton de reporte -->
-            <div id="reportContainer" style="margin-top: 1.5rem; display: none;">
-            <button id="reportButton" class="btn btn-primary">
-                <i class="fas fa-flag"></i> Reportar noticia
-            </button>
+            <div id="reportContainer">
+                <button id="reportButton" class="report-button">
+                    <i class="fas fa-flag"></i> Reportar Noticia
+                </button>
             </div>
         </div>
         <!-- Estado de carga -->
