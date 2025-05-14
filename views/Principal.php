@@ -387,7 +387,7 @@ if ($result->num_rows > 0) {
 
         <!-- Barra de búsqueda -->
         <div class="search-container">
-            <h2 style="margin-bottom: 1.5rem; color: #2c3e50;">Verificador de Noticias</h2>
+            <h2 style="margin-bottom: 1.5rem; color: #2c3e50;">Verificador de Noticias Medicas en español</h2>
             <div class="search-bar">
                 <input type="text" id="newsInput" placeholder="Ingrese URL o Texto de la Noticia">
                 <button id="verifyButton">
