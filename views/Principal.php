@@ -599,8 +599,8 @@ if ($result->num_rows > 0) {
                 document.getElementById('rf_titulo').value = title;
                 document.getElementById('rf_texto').value  = extractedText;
                 document.getElementById('rf_resultado').value = isFake
-                    ? 'Noticia Falsa'
-                    : 'Noticia Verdadera';
+                    ? 'Noticia Verdadera'
+                    : 'Noticia Falsa';
                 // 2) enviar el formulario
                 document.getElementById('reportForm').submit();
                 };

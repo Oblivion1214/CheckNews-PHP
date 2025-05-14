@@ -19,6 +19,7 @@ if ($res->num_rows === 0) {
     header("Location: login.php");
     exit();
 }
+// Obtener el nombre completo del usuario
 $user = $res->fetch_assoc();
 $nombre_completo = htmlspecialchars($user['nombre'] . ' ' . $user['apellido_paterno']);
 $stmt->close();
