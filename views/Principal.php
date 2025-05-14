@@ -427,8 +427,10 @@ if ($result->num_rows > 0) {
                 <span id="toggleText" class="toggle-text">Mostrar más</span>
             </div>
             <!-- Boton de reporte -->
-            <div id="reportContainer" style="margin-top: 1.5rem;">
-                <button id="reportButton" class="btn btn-primary">Reportar Noticia</button>
+            <div id="reportContainer" style="margin-top: 1.5rem; display: none;">
+            <button id="reportButton" class="btn btn-primary">
+                <i class="fas fa-flag"></i> Reportar noticia
+            </button>
             </div>
         </div>
         <!-- Estado de carga -->
@@ -437,6 +439,15 @@ if ($result->num_rows > 0) {
         </div>
         
     </div>
+
+    <!-- dentro de <body>, cerca de #reportContainer -->
+    <form id="reportForm" method="POST" action="reportar.php" style="display: none;">
+    <input type="hidden" name="noticia_url"     id="rf_url">
+    <input type="hidden" name="noticia_titulo"  id="rf_titulo">
+    <input type="hidden" name="noticia_texto"   id="rf_texto">
+    <input type="hidden" name="action"          value="prefill">
+    </form>
+
 
     <!-- Font Awesome para iconos -->
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
@@ -556,7 +567,7 @@ if ($result->num_rows > 0) {
                 // si tienes URL la prefieres, si no el texto
                 if (url) {
                 params.set('noticia_url', url);
-                }
+                } 
                 if (title) {
                 params.set('noticia_titulo', title);
                 }
@@ -565,8 +576,12 @@ if ($result->num_rows > 0) {
                 const reportContainer = document.getElementById('reportContainer');
                 const reportButton = document.getElementById('reportButton');
                 reportButton.onclick = () => {
-                // redirige a reportar.php con query string
-                window.location.href = 'reportar.php?' + params.toString();
+                // 1) rellenar los campos ocultos
+                document.getElementById('rf_url').value    = url;
+                document.getElementById('rf_titulo').value = title;
+                document.getElementById('rf_texto').value  = extractedText;
+                // 2) enviar el formulario
+                document.getElementById('reportForm').submit();
                 };
                 
                 // Mostrar contenedor de resultados
