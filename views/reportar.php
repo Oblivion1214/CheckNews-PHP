@@ -31,52 +31,70 @@ $prefill_resultado = '';
 $error             = '';
 $success           = '';
 
-// 4) Si venimos de Principal.php con action=prefill, precargamos
+// 4) Prefill desde Principal.php
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'prefill') {
     $prefill_url       = htmlspecialchars($_POST['noticia_url']   ?? '', ENT_QUOTES);
     $prefill_tit       = htmlspecialchars($_POST['noticia_titulo']?? '', ENT_QUOTES);
     $prefill_texto     = htmlspecialchars($_POST['noticia_texto'] ?? '', ENT_QUOTES);
     $prefill_resultado = htmlspecialchars($_POST['resultado']     ?? '', ENT_QUOTES);
 }
-// 5) Si es un POST normal (submit de reporte), procesamos e insertamos
+
+// 5) Submit definitivo: validar duplicados y luego insertar
 elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $usuario_id    = $_SESSION['usuarioID'];
-    // Validar sólo dos valores posibles
-    $raw = $_POST['resultado'] ?? '';
-    $resultado = ($raw === 'Noticia Verdadera') ? 'Noticia Verdadera' : 'Noticia Falsa';
-
+    $raw           = $_POST['resultado']    ?? '';
+    $resultado     = ($raw === 'Noticia Verdadera') ? 'Noticia Verdadera' : 'Noticia Falsa';
     $noticia_texto = trim($_POST['noticia_texto'] ?? '');
-    $categoria     = trim($_POST['categoria']       ?? 'otros');
-    $comentario    = trim($_POST['comentario']      ?? '');
+    $categoria     = trim($_POST['categoria']      ?? 'otros');
+    $comentario    = trim($_POST['comentario']     ?? '');
 
-    // Validaciones
-    if (mb_strlen($noticia_texto) < 5) {
-        $error = "El texto de la noticia es demasiado corto.";
-    } elseif (mb_strlen($comentario) < 20) {
-        $error = "El comentario debe tener al menos 20 caracteres.";
+    // **Validación anti-duplicado**: mismo usuario y mismo texto
+    $chk = $connection->prepare("
+       SELECT id_noticia 
+        FROM reportes_noticias_falsas 
+       WHERE usuario_id = ? 
+        AND noticia_texto = ?
+       LIMIT 1
+    ");
+    $chk->bind_param("is", $usuario_id, $noticia_texto);
+    $chk->execute();
+    $res_chk = $chk->get_result();
+    if ($res_chk->num_rows > 0) {
+        $error = "Ya has reportado esta noticia anteriormente.";
+        $chk->close();
     } else {
-        $sql = "INSERT INTO reportes_noticias_falsas
-                (usuario_id, resultado, noticia_texto, categoria, comentario)
-                VALUES (?, ?, ?, ?, ?)";
-        $stmt = $connection->prepare($sql);
-        $stmt->bind_param("issss",
-            $usuario_id,
-            $resultado,
-            $noticia_texto,
-            $categoria,
-            $comentario
-        );
-        if ($stmt->execute()) {
-            $success = "Reporte enviado con éxito. ¡Gracias por tu aporte!";
-            // limpiar prefills para no volver a mostrar
-            $prefill_url = $prefill_tit = $prefill_texto = $prefill_resultado = '';
+        $chk->close();
+        // Validaciones de longitud
+        if (mb_strlen($noticia_texto) < 5) {
+            $error = "El texto de la noticia es demasiado corto.";
+        } elseif (mb_strlen($comentario) < 20) {
+            $error = "El comentario debe tener al menos 20 caracteres.";
         } else {
-            $error = "Error al guardar el reporte: " . $stmt->error;
+            // Insertar
+            $sql = "INSERT INTO reportes_noticias_falsas
+                    (usuario_id, resultado, noticia_texto, categoria, comentario)
+                    VALUES (?, ?, ?, ?, ?)";
+            $ins = $connection->prepare($sql);
+            $ins->bind_param("issss",
+                $usuario_id,
+                $resultado,
+                $noticia_texto,
+                $categoria,
+                $comentario
+            );
+            if ($ins->execute()) {
+                $success = "Reporte enviado con éxito. ¡Gracias por tu aporte!";
+                // limpiar prefills
+                $prefill_url = $prefill_tit = $prefill_texto = $prefill_resultado = '';
+            } else {
+                $error = "Error al guardar el reporte: " . $ins->error;
+            }
+            $ins->close();
         }
-        $stmt->close();
     }
 }
-// 6) GET inicial: todo queda en blanco
+// 6) GET inicial: nada más
+
 ?>
 
 <!DOCTYPE html>
