@@ -369,7 +369,7 @@ if ($result->num_rows > 0) {
             <h2>CheckNews</h2>
         </div>
         <ul>
-            <li><a href="#"><i class="fas fa-compass"></i> Explorar</a></li>
+            <li><a href="Principal.php"><i class="fas fa-compass"></i> Explorar</a></li>
             <li><a href="verificados.php"><i class="fas fa-check-circle"></i> Noticias verificadas</a></li>
             <li><a href="herramientas.php"><i class="fas fa-tools"></i> Herramientas de Ayuda</a></li>
             <li><a href="reportar.php"><i class="fas fa-flag"></i> Reportar</a></li>
