@@ -521,7 +521,7 @@ if ($result->num_rows > 0) {
                 // Establecer confianza
                 confidenceValue.textContent = `${confidence}%`;
                 const confidenceExplanation = document.getElementById('confidenceExplanation');
-                // Establecer badge de confianza
+                // Mostrar explicación de confianza
                 if (explanation) {
                     confidenceExplanation.textContent = explanation;
                     confidenceExplanation.style.display = 'block';
