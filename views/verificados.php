@@ -288,7 +288,7 @@ $result_noticias = $connection->query($sql_noticias);
             <h1>Consulta de Noticias Verificadas</h1>
             <form id="search-form" method="GET" action="">
                 <input type="text" id="search-input" name="q" placeholder="Ingrese una palabra clave, frase o enlace..." 
-                       value="<?php echo isset($_GET['q']) ? htmlspecialchars($_GET['q']) : ''; ?>">
+                    value="<?php echo isset($_GET['q']) ? htmlspecialchars($_GET['q']) : ''; ?>">
                 <button type="submit">Buscar</button>
             </form>
         </div>
@@ -305,10 +305,13 @@ $result_noticias = $connection->query($sql_noticias);
                 <label for="category-filter">Categoría:</label>
                 <select id="category-filter" name="categoria">
                     <option value="all">Todas</option>
-                    <option value="politica" <?php echo (isset($_GET['categoria']) && $_GET['categoria'] == 'politica') ? 'selected' : ''; ?>>Política</option>
-                    <option value="economia" <?php echo (isset($_GET['categoria']) && $_GET['categoria'] == 'economia') ? 'selected' : ''; ?>>Economía</option>
-                    <option value="salud" <?php echo (isset($_GET['categoria']) && $_GET['categoria'] == 'salud') ? 'selected' : ''; ?>>Salud</option>
-                    <option value="tecnologia" <?php echo (isset($_GET['categoria']) && $_GET['categoria'] == 'tecnologia') ? 'selected' : ''; ?>>Tecnología</option>
+                    <option value="cancer" <?php echo (isset($_GET['categoria']) && $_GET['categoria'] == 'cancer') ? 'selected' : ''; ?>>Cancer</option>
+                    <option value="diabetes" <?php echo (isset($_GET['categoria']) && $_GET['categoria'] == 'diabetes') ? 'selected' : ''; ?>>Diabetes</option>
+                    <option value="asma" <?php echo (isset($_GET['categoria']) && $_GET['categoria'] == 'asma') ? 'selected' : ''; ?>>Asma</option>
+                    <option value="hipertension" <?php echo (isset($_GET['categoria']) && $_GET['categoria'] == 'hipertension') ? 'selected' : ''; ?>>Hipertension</option>
+                    <option value="obesidad" <?php echo (isset($_GET['categoria']) && $_GET['categoria'] == 'obesidad') ? 'selected' : ''; ?>>Obesidad</option>
+                    <option value="cardiovasculares" <?php echo (isset($_GET['categoria']) && $_GET['categoria'] == 'cardiovasculares') ? 'selected' : ''; ?>>Cardiovasculares</option>
+                    <option value="otros" <?php echo (isset($_GET['categoria']) && $_GET['categoria'] == 'otros') ? 'selected' : ''; ?>>Otros</option>
                 </select>
             </div>
             
