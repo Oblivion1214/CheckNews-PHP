@@ -19,20 +19,20 @@ if ($res->num_rows === 0) {
     header("Location: login.php");
     exit();
 }
-// Obtener el nombre completo del usuario
+// Obtener el nombre completo del usuario/
 $user = $res->fetch_assoc();
-$nombre_completo = htmlspecialchars($user['nombre'] . ' ' . $user['apellido_paterno']);
+$nombre_completo = htmlspecialchars($user['nombre'] . ' ' . $user['apellido_paterno'], ENT_QUOTES);
 $stmt->close();
 
-// Inicializar variables
-$prefill_url        = '';
-$prefill_tit        = '';
-$prefill_texto      = '';
-$prefill_resultado  = '';
-$error              = '';
-$success            = '';
+// 3) Inicializar variables
+$prefill_url       = '';
+$prefill_tit       = '';
+$prefill_texto     = '';
+$prefill_resultado = '';
+$error             = '';
+$success           = '';
 
-// 3) Procesar POST prefill
+// 4) Procesar POST prefill (llegado desde Principal.php)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'prefill') {
     $prefill_url       = htmlspecialchars($_POST['noticia_url']   ?? '', ENT_QUOTES);
     $prefill_tit       = htmlspecialchars($_POST['noticia_titulo']?? '', ENT_QUOTES);
@@ -40,25 +40,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'prefi
     $prefill_resultado = htmlspecialchars($_POST['resultado']     ?? '', ENT_QUOTES);
 }
 
-// 4) Procesar POST definitivo (submit de reporte)
+// 5) Procesar POST definitivo (submit de reporte)
 elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Leer campos
     $usuario_id    = $_SESSION['usuarioID'];
-    $resultado     = trim($_POST['resultado']      ?? 'Noticia Falsa');
-    $noticia_texto = trim($_POST['noticia_texto']  ?? '');
+    $raw_resultado = $_POST['resultado'] ?? '';
+    // Validar sólo dos valores posibles
+    $resultado = ($raw_resultado === 'Noticia Verdadera') 
+                   ? 'Noticia Verdadera' 
+                   : 'Noticia Falsa';
+    $noticia_texto = trim($_POST['noticia_texto'] ?? '');
     $categoria     = trim($_POST['categoria']      ?? 'otros');
     $comentario    = trim($_POST['comentario']     ?? '');
 
     // Validaciones
-    if (strlen($noticia_texto) < 5) {
+    if (mb_strlen($noticia_texto) < 5) {
         $error = "El texto de la noticia es demasiado corto.";
-    } elseif (strlen($comentario) < 20) {
+    } elseif (mb_strlen($comentario) < 20) {
         $error = "El comentario debe tener al menos 20 caracteres.";
     } else {
-        $sql = "INSERT INTO reportes_noticias_falsas
-                (usuario_id, resultado, noticia_texto, categoria, comentario)
-                VALUES (?, ?, ?, ?, ?)";
+        // Limitar longitud si la columna es VARCHAR o TEXT no riesgoso
+        // $noticia_texto = mb_substr($noticia_texto, 0, 65535);
+
+        // Insertar reporte
+        $sql = "
+          INSERT INTO reportes_noticias_falsas
+            (usuario_id, resultado, noticia_texto, categoria, comentario)
+          VALUES (?, ?, ?, ?, ?)
+        ";
         $stmt = $connection->prepare($sql);
-        $stmt->bind_param("issss",
+        $stmt->bind_param(
+            "issss",
             $usuario_id,
             $resultado,
             $noticia_texto,
@@ -67,7 +79,7 @@ elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
         );
         if ($stmt->execute()) {
             $success = "Reporte enviado con éxito. ¡Gracias por tu aporte!";
-            // Limpiar prefill para no volver a mostrar datos
+            // Limpiar prefills
             $prefill_url = $prefill_tit = $prefill_texto = $prefill_resultado = '';
         } else {
             $error = "Error al guardar el reporte: " . $stmt->error;
