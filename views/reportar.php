@@ -2,7 +2,7 @@
 include 'config.php';
 session_start();
 
-// 1) Verificar si el usuario está logueado
+// 1) Verificar sesión
 if (!isset($_SESSION['usuarioID'])) {
     header("Location: login.php");
     exit();
@@ -19,7 +19,6 @@ if ($res->num_rows === 0) {
     header("Location: login.php");
     exit();
 }
-// Obtener el nombre completo del usuario/
 $user = $res->fetch_assoc();
 $nombre_completo = htmlspecialchars($user['nombre'] . ' ' . $user['apellido_paterno'], ENT_QUOTES);
 $stmt->close();
@@ -32,26 +31,23 @@ $prefill_resultado = '';
 $error             = '';
 $success           = '';
 
-// 4) Procesar POST prefill (llegado desde Principal.php)
+// 4) Si venimos de Principal.php con action=prefill, precargamos
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'prefill') {
     $prefill_url       = htmlspecialchars($_POST['noticia_url']   ?? '', ENT_QUOTES);
     $prefill_tit       = htmlspecialchars($_POST['noticia_titulo']?? '', ENT_QUOTES);
     $prefill_texto     = htmlspecialchars($_POST['noticia_texto'] ?? '', ENT_QUOTES);
     $prefill_resultado = htmlspecialchars($_POST['resultado']     ?? '', ENT_QUOTES);
 }
-
-// 5) Procesar POST definitivo (submit de reporte)
+// 5) Si es un POST normal (submit de reporte), procesamos e insertamos
 elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Leer campos
     $usuario_id    = $_SESSION['usuarioID'];
-    $raw_resultado = $_POST['resultado'] ?? '';
     // Validar sólo dos valores posibles
-    $resultado = ($raw_resultado === 'Noticia Verdadera') 
-                   ? 'Noticia Verdadera' 
-                   : 'Noticia Falsa';
+    $raw = $_POST['resultado'] ?? '';
+    $resultado = ($raw === 'Noticia Verdadera') ? 'Noticia Verdadera' : 'Noticia Falsa';
+
     $noticia_texto = trim($_POST['noticia_texto'] ?? '');
-    $categoria     = trim($_POST['categoria']      ?? 'otros');
-    $comentario    = trim($_POST['comentario']     ?? '');
+    $categoria     = trim($_POST['categoria']       ?? 'otros');
+    $comentario    = trim($_POST['comentario']      ?? '');
 
     // Validaciones
     if (mb_strlen($noticia_texto) < 5) {
@@ -59,18 +55,11 @@ elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif (mb_strlen($comentario) < 20) {
         $error = "El comentario debe tener al menos 20 caracteres.";
     } else {
-        // Limitar longitud si la columna es VARCHAR o TEXT no riesgoso
-        // $noticia_texto = mb_substr($noticia_texto, 0, 65535);
-
-        // Insertar reporte
-        $sql = "
-          INSERT INTO reportes_noticias_falsas
-            (usuario_id, resultado, noticia_texto, categoria, comentario)
-          VALUES (?, ?, ?, ?, ?)
-        ";
+        $sql = "INSERT INTO reportes_noticias_falsas
+                (usuario_id, resultado, noticia_texto, categoria, comentario)
+                VALUES (?, ?, ?, ?, ?)";
         $stmt = $connection->prepare($sql);
-        $stmt->bind_param(
-            "issss",
+        $stmt->bind_param("issss",
             $usuario_id,
             $resultado,
             $noticia_texto,
@@ -79,7 +68,7 @@ elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
         );
         if ($stmt->execute()) {
             $success = "Reporte enviado con éxito. ¡Gracias por tu aporte!";
-            // Limpiar prefills
+            // limpiar prefills para no volver a mostrar
             $prefill_url = $prefill_tit = $prefill_texto = $prefill_resultado = '';
         } else {
             $error = "Error al guardar el reporte: " . $stmt->error;
@@ -87,8 +76,7 @@ elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->close();
     }
 }
-// Si llegas por GET o nada más, las variables de prefill quedan vacías
-
+// 6) GET inicial: todo queda en blanco
 ?>
 
 <!DOCTYPE html>
@@ -334,46 +322,97 @@ elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <!-- Contenido principal -->
     <div class="content">
-        <div class="user-info">
-            Bienvenido, <?php echo $nombre_completo; ?> 
-            <a href="logout.php">Cerrar sesión</a>
-        </div>
-
-        <div class="form-container">
-            <h1 class="form-title">Reportar Noticia Dudosa</h1>
-
-            <form method="POST" action="reportar.php">
-
-                <div class="form-group">
-                    <label for="noticia_texto" class="form-label">URL o Texto de la noticia:</label>
-                    <input type="noticia_texto" id="unoticia_textor" name="noticia_texto" class="form-control"
-                        value="<?php echo isset($_POST['noticia_texto']) ? $_POST['noticia_texto'] : ''; ?>" 
-                        placeholder="https://ejemplo.com/noticia" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="categoria" class="form-label">Categoría:</label>
-                    <select id="categoria" name="categoria" class="form-control" required>
-                        <option value="">Seleccione una categoría</option>
-                        <option value="cancer" <?php echo (isset($_POST['categoria']) && $_POST['categoria'] == 'cancer') ? 'selected' : ''; ?>>Cancer</option>
-                        <option value="diabetes" <?php echo (isset($_POST['categoria']) && $_POST['categoria'] == 'diabetes') ? 'selected' : ''; ?>>Diabetes</option>
-                        <option value="asma" <?php echo (isset($_POST['categoria']) && $_POST['categoria'] == 'asma') ? 'selected' : ''; ?>>Asma</option>
-                        <option value="hipertension" <?php echo (isset($_POST['categoria']) && $_POST['categoria'] == 'hipertension') ? 'selected' : ''; ?>>Hipertension</option>
-                        <option value="obesidad" <?php echo (isset($_POST['categoria']) && $_POST['categoria'] == 'obesidad') ? 'selected' : ''; ?>>Obesidad</option>
-                        <option value="cardiovasculares" <?php echo (isset($_POST['categoria']) && $_POST['categoria'] == 'cardiovasculares') ? 'selected' : ''; ?>>Enfermedades cardiovasculares</option>
-                        <option value="otros" <?php echo (isset($_POST['categoria']) && $_POST['categoria'] == 'otros') ? 'selected' : ''; ?>>Otros</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="comentario" class="form-label">¿Por qué crees que esta noticia es falsa o dudosa?</label>
-                    <textarea id="comentario" name="comentario" class="form-control" required></textarea>
-                </div>
-                <small class="text-muted">Mínimo 20 caracteres. Describe con detalle tus sospechas.</small>
-
-                <button type="submit" class="btn btn-primary">Reportar Noticia</button>
-            </form>
-        </div>
+    <div class="user-info">
+      Bienvenido, <?php echo $nombre_completo; ?>
+      <a href="logout.php">Cerrar sesión</a>
     </div>
+
+    <div class="form-container">
+      <h1 class="form-title">Reportar Noticia Dudosa</h1>
+
+      <?php if ($error): ?>
+        <div class="alert alert-error"><?php echo $error; ?></div>
+      <?php elseif ($success): ?>
+        <div class="alert alert-success"><?php echo $success; ?></div>
+      <?php endif; ?>
+
+      <form method="POST" action="reportar.php">
+        <!-- Prefill visual -->
+        <?php if ($prefill_url): ?>
+          <p><strong>URL analizada:</strong>
+            <a href="<?php echo $prefill_url; ?>" target="_blank">
+              <?php echo $prefill_url; ?>
+            </a>
+          </p>
+        <?php endif; ?>
+
+        <?php if ($prefill_tit): ?>
+          <p><strong>Título detectado:</strong> <?php echo $prefill_tit; ?></p>
+        <?php endif; ?>
+
+        <?php if ($prefill_resultado): ?>
+          <p><strong>Resultado de la IA:</strong> <?php echo $prefill_resultado; ?></p>
+        <?php endif; ?>
+
+        <!-- Hidden: para capturar el resultado -->
+        <input type="hidden" name="resultado"
+               value="<?php echo $prefill_resultado; ?>">
+        <!-- Hidden: para distinguir prefill (no hace falta aquí, ya lo procesamos) -->
+        <input type="hidden" name="action" value="">
+
+        <!-- Texto/URL de la noticia -->
+        <div class="form-group">
+          <label for="noticia_texto" class="form-label">
+            URL o Texto de la noticia:
+          </label>
+          <textarea id="noticia_texto" name="noticia_texto"
+                    class="form-control" rows="4" required><?php
+            // Si ya postearon (validación), muestro POST; si no, muestro prefill
+            echo htmlspecialchars(
+              $_POST['noticia_texto'] ?? $prefill_texto,
+              ENT_QUOTES
+            );
+          ?></textarea>
+        </div>
+
+        <!-- Categoría -->
+        <div class="form-group">
+          <label for="categoria" class="form-label">Categoría:</label>
+          <select id="categoria" name="categoria" class="form-control" required>
+            <?php
+              $cats = [
+                'cancer'=>'Cáncer','diabetes'=>'Diabetes','asma'=>'Asma',
+                'hipertension'=>'Hipertensión','obesidad'=>'Obesidad',
+                'cardiovasculares'=>'Enfermedades cardiovasculares','otros'=>'Otros'
+              ];
+              $sel = $_POST['categoria'] ?? '';
+              foreach ($cats as $val => $lab) {
+                $s = ($sel === $val) ? 'selected' : '';
+                echo "<option value=\"$val\" $s>$lab</option>";
+              }
+            ?>
+          </select>
+        </div>
+
+        <!-- Comentario -->
+        <div class="form-group">
+          <label for="comentario" class="form-label">
+            ¿Por qué crees que esta noticia es falsa o dudosa?
+          </label>
+          <textarea id="comentario" name="comentario"
+                    class="form-control" rows="5" required><?php
+            echo htmlspecialchars($_POST['comentario'] ?? '', ENT_QUOTES);
+          ?></textarea>
+          <small class="text-muted">
+            Mínimo 20 caracteres. Describe con detalle tus sospechas.
+          </small>
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+          <i class="fas fa-flag"></i> Reportar Noticia
+        </button>
+      </form>
+    </div>
+  </div>
 </body>
 </html>
