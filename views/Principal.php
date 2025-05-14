@@ -384,7 +384,6 @@ if ($result->num_rows > 0) {
             <span class="welcome">Bienvenido, <?php echo $nombre_completo; ?></span>
             <a href="logout.php">Cerrar sesión</a>
         </div>
-
         <!-- Barra de búsqueda -->
         <div class="search-container">
             <h2 style="margin-bottom: 1.5rem; color: #2c3e50;">Verificador de Noticias Medicas en español</h2>
@@ -396,7 +395,6 @@ if ($result->num_rows > 0) {
             </div>
             <p style="color: #7f8c8d; font-size: 0.9rem;">Pega el enlace de una noticia o escribe directamente el texto que deseas verificar</p>
         </div>
-
         <!-- Resultados de verificación -->
         <div id="verificationResult" class="verification-result">
             <div class="result-header">
@@ -429,10 +427,15 @@ if ($result->num_rows > 0) {
                 <span id="toggleText" class="toggle-text">Mostrar más</span>
             </div>
         </div>
-
         <!-- Estado de carga -->
         <div id="loadingState" class="loading" style="display: none;">
             <div class="spinner"></div>
+        </div>
+        <!-- Boton de reporte -->
+        <div id="reportContainer" style="margin-top: 1.5rem; display: none;">
+        <button id="reportButton" class="btn btn-primary">
+            <i class="fas fa-flag"></i> Reportar noticia
+        </button>
         </div>
     </div>
 
@@ -548,6 +551,24 @@ if ($result->num_rows > 0) {
 
                 // Mostrar texto extraído
                 extractedTextElement.textContent = extractedText;
+
+                // 1) Preparamos los datos para enviar
+                const params = new URLSearchParams();
+                // si tienes URL la prefieres, si no el texto
+                if (url) {
+                params.set('noticia_url', url);
+                }
+                if (title) {
+                params.set('noticia_titulo', title);
+                }
+                params.set('noticia_texto', extractedText);
+                // 2) Configuramos el botón
+                const reportContainer = document.getElementById('reportContainer');
+                const reportButton = document.getElementById('reportButton');
+                reportButton.onclick = () => {
+                // redirige a reportar.php con query string
+                window.location.href = 'reportar.php?' + params.toString();
+                };
                 
                 // Mostrar contenedor de resultados
                 resultContainer.style.display = 'block';
