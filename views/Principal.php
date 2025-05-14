@@ -153,19 +153,19 @@ if ($result->num_rows > 0) {
             margin-bottom: 2rem;
         }
 
-        .reportContainer{
-            background-color: #e74c3c;
+        .report-button{
+            padding: 1rem 2rem;
+            background-color: #3498db;
             color: white;
             border: none;
-            padding: 0.8rem 1.5rem;
-            font-size: 1rem;
-            font-weight: 600;
             border-radius: 8px;
             cursor: pointer;
-            display: inline-flex;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
             align-items: center;
             gap: 0.5rem;
-            transition: all 0.3s ease;
         }
 
         .search-bar {
