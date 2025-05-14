@@ -406,15 +406,17 @@ if ($result->num_rows > 0) {
             
             <div class="result-meta">
                 <div id="confidenceBadge" class="confidence-badge">
-                    Confianza del modelo: <span id="confidenceValue">0</span> es <span id="resultTitle">Noticia Falsa</span>
-                </div>
+                    Confianza del modelo: <span id="confidenceValue">0</span> de que sea <span id="resultText">desconocido</span>
+        </div>
+
+            </div>
+
             </div>
 
             <div id="confidenceExplanationContainer" style="margin-top: 1rem;">
                 <p><strong>Explicación de confianza:</strong> <span id="confidenceExplanation"></span></p>
             </div>
 
-            
             <div id="resultUrlContainer" style="display: none;">
                 <p><strong>URL analizada:</strong> <a id="resultUrl" class="result-url" target="_blank"></a></p>
             </div>
@@ -535,10 +537,14 @@ if ($result->num_rows > 0) {
                 const confidenceExplanation = document.getElementById('confidenceExplanation');
                 let explanationText = '';
 
-                if (confidence >= 70) {
-                    explanationText = 'El sistema tiene una alta confianza en su predicción, lo que indica una alta probabilidad de que la clasificación sea correcta.';
-                } else if (confidence >= 40) {
-                    explanationText = 'El sistema tiene una confianza moderada en su predicción. Se recomienda revisar la fuente de la noticia para mayor seguridad.';
+                if (confidence >= 80) {
+                    explanationText = 'El sistema tiene una alta confianza en su predicción, lo que indica que la noticia es muy probablemente verdadera.';
+                } else if (confidence >= 70) {
+                    explanationText = 'El sistema tiene una buena confianza en su predicción, lo que sugiere que la noticia es probablemente verdadera.';
+                } else if (confidence >= 60) {
+                    explanationText = 'El sistema tiene una confianza moderada en su predicción, lo que indica que la noticia podría ser verdadera.';
+                } else if (confidence >= 50) {
+                    explanationText = 'El sistema tiene una confianza moderada-baja en su predicción. Se recomienda tener discreción con la información.';
                 } else {
                     explanationText = 'La predicción fue realizada con baja confianza, por lo tanto, se recomienda precaución y verificación adicional.';
                 }
