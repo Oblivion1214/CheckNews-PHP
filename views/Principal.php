@@ -331,6 +331,7 @@ if ($result->num_rows > 0) {
             font-size: 14px;
             color: #555;
             font-style: italic;
+            margin-top: 0.5rem;
         }
 
 
