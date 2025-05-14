@@ -30,6 +30,7 @@ if ($result->num_rows > 0) {
 // Consulta para obtener noticias verificadas
 $sql_noticias = "SELECT * FROM reportes_noticias_falsas ORDER BY fecha_reporte DESC";
 $result_noticias = $connection->query($sql_noticias);
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -328,7 +329,7 @@ $result_noticias = $connection->query($sql_noticias);
             <div id="results-list">
                 <?php
                 // Construir consulta con filtros
-                $sql = "SELECT * FROM noticias_verificadas WHERE 1=1";
+                $sql = "SELECT * FROM reportes_noticias_falsas WHERE 1=1";
                 $params = [];
                 $types = "";
                 
@@ -340,7 +341,7 @@ $result_noticias = $connection->query($sql_noticias);
                 }
                 
                 if (isset($_GET['fecha']) && !empty($_GET['fecha'])) {
-                    $sql .= " AND DATE(fecha_publicacion) = ?";
+                    $sql .= " AND DATE(fecha_reporte) = ?";
                     array_push($params, $_GET['fecha']);
                     $types .= "s";
                 }
@@ -357,7 +358,7 @@ $result_noticias = $connection->query($sql_noticias);
                     $types .= "i";
                 }
                 
-                $sql .= " ORDER BY fecha_publicacion DESC";
+                $sql .= " ORDER BY fecha_reporte DESC";
                 
                 // Ejecutar consulta
                 $stmt = $connection->prepare($sql);

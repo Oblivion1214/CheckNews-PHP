@@ -10,7 +10,7 @@ if (!isset($_SESSION['usuarioID'])) {
 
 // Obtener información del usuario desde la base de datos
 $user_id = $_SESSION['usuarioID'];
-$sql = "SELECT nombre, apellido_paterno, tipo_usuario FROM usuarios WHERE id = ?";
+$sql = "SELECT nombre, apellido_paterno FROM usuarios WHERE id = ?";
 $stmt = $connection->prepare($sql);
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
@@ -279,17 +279,11 @@ if ($result->num_rows > 0) {
             <h1 class="form-title">Reportar Noticia Dudosa</h1>
 
             <form method="POST" action="reportar.php">
-                <div class="form-group">
-                    <label for="titulo" class="form-label">Título de la noticia:</label>
-                    <input type="text" id="titulo" name="titulo" class="form-control"
-                           value="<?php echo isset($_POST['titulo']) ? $_POST['titulo'] : ''; ?>" 
-                           required>
-                </div>
 
                 <div class="form-group">
-                    <label for="url" class="form-label">URL de la noticia:</label>
-                    <input type="url" id="url" name="url" class="form-control"
-                           value="<?php echo isset($_POST['url']) ? $_POST['url'] : ''; ?>" 
+                    <label for="noticia_texto" class="form-label">URL o Texto de la noticia:</label>
+                    <input type="noticia_texto" id="unoticia_textor" name="noticia_texto" class="form-control"
+                           value="<?php echo isset($_POST['noticia_texto']) ? $_POST['noticia_texto'] : ''; ?>" 
                            placeholder="https://ejemplo.com/noticia" required>
                 </div>
 
@@ -297,17 +291,19 @@ if ($result->num_rows > 0) {
                     <label for="categoria" class="form-label">Categoría:</label>
                     <select id="categoria" name="categoria" class="form-control" required>
                         <option value="">Seleccione una categoría</option>
-                        <option value="politica" <?php echo (isset($_POST['categoria']) && $_POST['categoria'] == 'politica') ? 'selected' : ''; ?>>Política</option>
-                        <option value="economia" <?php echo (isset($_POST['categoria']) && $_POST['categoria'] == 'economia') ? 'selected' : ''; ?>>Economía</option>
-                        <option value="salud" <?php echo (isset($_POST['categoria']) && $_POST['categoria'] == 'salud') ? 'selected' : ''; ?>>Salud</option>
-                        <option value="tecnologia" <?php echo (isset($_POST['categoria']) && $_POST['categoria'] == 'tecnologia') ? 'selected' : ''; ?>>Tecnología</option>
+                        <option value="cancer" <?php echo (isset($_POST['categoria']) && $_POST['categoria'] == 'cancer') ? 'selected' : ''; ?>>Cancer</option>
+                        <option value="diabetes" <?php echo (isset($_POST['categoria']) && $_POST['categoria'] == 'diabetes') ? 'selected' : ''; ?>>Diabetes</option>
+                        <option value="asma" <?php echo (isset($_POST['categoria']) && $_POST['categoria'] == 'asma') ? 'selected' : ''; ?>>Asma</option>
+                        <option value="hipertension" <?php echo (isset($_POST['categoria']) && $_POST['categoria'] == 'hipertension') ? 'selected' : ''; ?>>Hipertension</option>
+                        <option value="obesidad" <?php echo (isset($_POST['categoria']) && $_POST['categoria'] == 'obesidad') ? 'selected' : ''; ?>>Obesidad</option>
+                        <option value="cardiovasculares" <?php echo (isset($_POST['categoria']) && $_POST['categoria'] == 'cardiovasculares') ? 'selected' : ''; ?>>Enfermedades cardiovasculares</option>
                         <option value="otros" <?php echo (isset($_POST['categoria']) && $_POST['categoria'] == 'otros') ? 'selected' : ''; ?>>Otros</option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label for="descripcion" class="form-label">¿Por qué crees que esta noticia es falsa o dudosa?</label>
-                    <textarea id="descripcion" name="descripcion" class="form-control" required></textarea>
+                    <label for="comentario" class="form-label">¿Por qué crees que esta noticia es falsa o dudosa?</label>
+                    <textarea id="comentario" name="comentario" class="form-control" required></textarea>
                 </div>
                 <small class="text-muted">Mínimo 20 caracteres. Describe con detalle tus sospechas.</small>
 
