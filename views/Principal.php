@@ -461,8 +461,10 @@ if ($result->num_rows > 0) {
     <input type="hidden" name="noticia_url"     id="rf_url">
     <input type="hidden" name="noticia_titulo"  id="rf_titulo">
     <input type="hidden" name="noticia_texto"   id="rf_texto">
+    <input type="hidden" name="resultado"       id="rf_resultado">   <!-- NUEVO -->
     <input type="hidden" name="action"          value="prefill">
     </form>
+
 
 
     <!-- Font Awesome para iconos -->

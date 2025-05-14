@@ -2,31 +2,82 @@
 include 'config.php';
 session_start();
 
-// Verificar si el usuario está logueado
+// 1) Verificar si el usuario está logueado
 if (!isset($_SESSION['usuarioID'])) {
     header("Location: login.php");
     exit();
 }
 
-// Obtener información del usuario
+// 2) Obtener nombre completo
 $user_id = $_SESSION['usuarioID'];
-$sql = "SELECT nombre, apellido_paterno FROM usuarios WHERE id = ?";
-$stmt = $connection->prepare($sql);
+$stmt = $connection->prepare("SELECT nombre, apellido_paterno FROM usuarios WHERE id = ?");
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
-$result = $stmt->get_result();
-
-if ($result->num_rows > 0) {
-    $user = $result->fetch_assoc();
-    $nombre_completo = htmlspecialchars($user['nombre'] . ' ' . $user['apellido_paterno']);
-} else {
-    // Si no existe el usuario en BD pero tenía sesión, limpiar todo
+$res = $stmt->get_result();
+if ($res->num_rows === 0) {
     session_destroy();
     header("Location: login.php");
     exit();
 }
+$user = $res->fetch_assoc();
+$nombre_completo = htmlspecialchars($user['nombre'] . ' ' . $user['apellido_paterno']);
+$stmt->close();
+
+// Inicializar variables
+$prefill_url        = '';
+$prefill_tit        = '';
+$prefill_texto      = '';
+$prefill_resultado  = '';
+$error              = '';
+$success            = '';
+
+// 3) Procesar POST prefill
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'prefill') {
+    $prefill_url       = htmlspecialchars($_POST['noticia_url']   ?? '', ENT_QUOTES);
+    $prefill_tit       = htmlspecialchars($_POST['noticia_titulo']?? '', ENT_QUOTES);
+    $prefill_texto     = htmlspecialchars($_POST['noticia_texto'] ?? '', ENT_QUOTES);
+    $prefill_resultado = htmlspecialchars($_POST['resultado']     ?? '', ENT_QUOTES);
+}
+
+// 4) Procesar POST definitivo (submit de reporte)
+elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $usuario_id    = $_SESSION['usuarioID'];
+    $resultado     = trim($_POST['resultado']      ?? 'Noticia Falsa');
+    $noticia_texto = trim($_POST['noticia_texto']  ?? '');
+    $categoria     = trim($_POST['categoria']      ?? 'otros');
+    $comentario    = trim($_POST['comentario']     ?? '');
+
+    // Validaciones
+    if (strlen($noticia_texto) < 5) {
+        $error = "El texto de la noticia es demasiado corto.";
+    } elseif (strlen($comentario) < 20) {
+        $error = "El comentario debe tener al menos 20 caracteres.";
+    } else {
+        $sql = "INSERT INTO reportes_noticias_falsas
+                (usuario_id, resultado, noticia_texto, categoria, comentario)
+                VALUES (?, ?, ?, ?, ?)";
+        $stmt = $connection->prepare($sql);
+        $stmt->bind_param("issss",
+            $usuario_id,
+            $resultado,
+            $noticia_texto,
+            $categoria,
+            $comentario
+        );
+        if ($stmt->execute()) {
+            $success = "Reporte enviado con éxito. ¡Gracias por tu aporte!";
+            // Limpiar prefill para no volver a mostrar datos
+            $prefill_url = $prefill_tit = $prefill_texto = $prefill_resultado = '';
+        } else {
+            $error = "Error al guardar el reporte: " . $stmt->error;
+        }
+        $stmt->close();
+    }
+}
+// Si llegas por GET o nada más, las variables de prefill quedan vacías
 
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -283,8 +334,8 @@ if ($result->num_rows > 0) {
                 <div class="form-group">
                     <label for="noticia_texto" class="form-label">URL o Texto de la noticia:</label>
                     <input type="noticia_texto" id="unoticia_textor" name="noticia_texto" class="form-control"
-                           value="<?php echo isset($_POST['noticia_texto']) ? $_POST['noticia_texto'] : ''; ?>" 
-                           placeholder="https://ejemplo.com/noticia" required>
+                        value="<?php echo isset($_POST['noticia_texto']) ? $_POST['noticia_texto'] : ''; ?>" 
+                        placeholder="https://ejemplo.com/noticia" required>
                 </div>
 
                 <div class="form-group">
