@@ -28,7 +28,7 @@ if ($result->num_rows > 0) {
 }
 
 // Consulta para obtener noticias verificadas
-$sql_noticias = "SELECT * FROM noticias_verificadas ORDER BY fecha_publicacion DESC";
+$sql_noticias = "SELECT * FROM reportes_noticias_falsas ORDER BY fecha_reporte DESC";
 $result_noticias = $connection->query($sql_noticias);
 ?>
 <!DOCTYPE html>
@@ -261,18 +261,17 @@ $result_noticias = $connection->query($sql_noticias);
     </style>
 </head>
 <body>
-    <!-- Barra lateral de navegación -->
+    <!-- Barra lateral -->
     <div class="sidebar">
         <div class="logo-container">
-            <img src="imag/CheckNews.png" alt="Logo" class="logo">
-            <h2>Noticias Verificadas</h2>
+            <img src="CheckNews.png" alt="Logo">
+            <h2>CheckNews</h2>
         </div>
         <ul>
-            <li><a href="Principal.php">Inicio</a></li>
-            <li><a href="reportar.php">Reportar</a></li>
-            <?php if ($tipo_usuario === 'admin'): ?>
-                <li><a href="admin.php">Panel Admin</a></li>
-            <?php endif; ?>
+            <li><a href="Principal.php"><i class="fas fa-compass"></i> Explorar</a></li>
+            <li><a href="verificados.php"><i class="fas fa-check-circle"></i> Noticias reportadas</a></li>
+            <li><a href="herramientas.php"><i class="fas fa-tools"></i> Herramientas de Ayuda</a></li>
+            <li><a href="reportar.php"><i class="fas fa-flag"></i> Reportar Noticia</a></li>
         </ul>
     </div>
 
@@ -299,7 +298,7 @@ $result_noticias = $connection->query($sql_noticias);
             <div class="filter-group">
                 <label for="date-filter">Fecha:</label>
                 <input type="date" id="date-filter" name="fecha" 
-                       value="<?php echo isset($_GET['fecha']) ? htmlspecialchars($_GET['fecha']) : ''; ?>">
+                    value="<?php echo isset($_GET['fecha']) ? htmlspecialchars($_GET['fecha']) : ''; ?>">
             </div>
             
             <div class="filter-group">
