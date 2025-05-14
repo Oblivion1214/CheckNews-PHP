@@ -361,6 +361,7 @@ if ($result->num_rows > 0) {
         }
     </style>
 </head>
+
 <body>
     <!-- Barra lateral -->
     <div class="sidebar">
