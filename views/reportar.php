@@ -114,18 +114,18 @@ elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     .logo-container {
-        text-align: center;
-        margin-bottom: 2rem;
-    }
+            text-align: center;
+            margin-bottom: 2rem;
+        }
 
-    .logo {
-        width: 90px;
-        height: 90px;
-        object-fit: cover;
-        margin-bottom: 1rem;
-        border-radius: 50%;
-        border: 3px solid #3498db;
-    }
+        .logo-container img {
+            width: 90px;
+            height: 90px;
+            object-fit: cover;
+            margin-bottom: 1rem;
+            border-radius: 50%;
+            border: 3px solid #3498db;
+        }
 
     .sidebar h2 {
         font-size: 1.5rem;
