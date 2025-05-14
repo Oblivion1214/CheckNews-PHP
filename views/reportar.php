@@ -31,50 +31,44 @@ $prefill_resultado = '';
 $error             = '';
 $success           = '';
 
-// 4) Prefill desde Principal.php
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'prefill') {
-    $prefill_url       = htmlspecialchars($_POST['noticia_url']   ?? '', ENT_QUOTES);
-    $prefill_tit       = htmlspecialchars($_POST['noticia_titulo']?? '', ENT_QUOTES);
-    $prefill_texto     = htmlspecialchars($_POST['noticia_texto'] ?? '', ENT_QUOTES);
-    $prefill_resultado = htmlspecialchars($_POST['resultado']     ?? '', ENT_QUOTES);
-}
+// 4) ¿Es submit final? detectamos si llegó comentario
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['comentario'])) {
+    // Leer y validar resultado
+    $raw = $_POST['resultado'] ?? '';
+    $resultado = ($raw === 'Noticia Verdadera') ? 'Noticia Verdadera' : 'Noticia Falsa';
 
-// 5) Submit definitivo: validar duplicados y luego insertar
-elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Leer resto de campos
     $usuario_id    = $_SESSION['usuarioID'];
-    $raw           = $_POST['resultado']    ?? '';
-    $resultado     = ($raw === 'Noticia Verdadera') ? 'Noticia Verdadera' : 'Noticia Falsa';
     $noticia_texto = trim($_POST['noticia_texto'] ?? '');
-    $categoria     = trim($_POST['categoria']      ?? 'otros');
-    $comentario    = trim($_POST['comentario']     ?? '');
+    $categoria     = trim($_POST['categoria']       ?? 'otros');
+    $comentario    = trim($_POST['comentario']      ?? '');
 
-    // **Validación anti-duplicado**: mismo usuario y mismo texto
+    // Validar duplicado
     $chk = $connection->prepare("
-       SELECT id_noticia 
-        FROM reportes_noticias_falsas 
-       WHERE usuario_id = ? 
-        AND noticia_texto = ?
+      SELECT 1 FROM reportes_noticias_falsas
+       WHERE usuario_id = ? AND noticia_texto = ?
        LIMIT 1
     ");
     $chk->bind_param("is", $usuario_id, $noticia_texto);
     $chk->execute();
     $res_chk = $chk->get_result();
-    if ($res_chk->num_rows > 0) {
+    if ($res_chk->num_rows) {
         $error = "Ya has reportado esta noticia anteriormente.";
         $chk->close();
     } else {
         $chk->close();
-        // Validaciones de longitud
+        // Validar longitudes
         if (mb_strlen($noticia_texto) < 5) {
             $error = "El texto de la noticia es demasiado corto.";
         } elseif (mb_strlen($comentario) < 20) {
             $error = "El comentario debe tener al menos 20 caracteres.";
         } else {
             // Insertar
-            $sql = "INSERT INTO reportes_noticias_falsas
-                    (usuario_id, resultado, noticia_texto, categoria, comentario)
-                    VALUES (?, ?, ?, ?, ?)";
-            $ins = $connection->prepare($sql);
+            $ins = $connection->prepare("
+              INSERT INTO reportes_noticias_falsas
+                (usuario_id, resultado, noticia_texto, categoria, comentario)
+              VALUES (?, ?, ?, ?, ?)
+            ");
             $ins->bind_param("issss",
                 $usuario_id,
                 $resultado,
@@ -83,15 +77,23 @@ elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $comentario
             );
             if ($ins->execute()) {
-                $success = "Reporte enviado con éxito. ¡Gracias por tu aporte!";
-                // limpiar prefills
-                $prefill_url = $prefill_tit = $prefill_texto = $prefill_resultado = '';
+                $success = "Reporte enviado con éxito. ¡Gracias!";
             } else {
                 $error = "Error al guardar el reporte: " . $ins->error;
             }
             $ins->close();
         }
     }
+}
+// 5) ¿Es prefill? detectamos si llegó noticia_texto sin comentario
+elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['comentario']) && isset($_POST['noticia_texto'])) {
+    $prefill_url       = htmlspecialchars($_POST['noticia_url']   ?? '', ENT_QUOTES);
+    $prefill_tit       = htmlspecialchars($_POST['noticia_titulo']?? '', ENT_QUOTES);
+    $prefill_texto     = htmlspecialchars($_POST['noticia_texto'] ?? '', ENT_QUOTES);
+    // Forzamos mismo valor que usó la IA
+    $prefill_resultado = (($_POST['prediccion'] ?? '') === '0' || ($_POST['resultado'] ?? '') === 'Noticia Falsa')
+                        ? 'Noticia Falsa'
+                        : 'Noticia Verdadera';
 }
 // 6) GET inicial: nada más
 
