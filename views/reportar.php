@@ -272,7 +272,7 @@ if ($result->num_rows > 0) {
     <div class="content">
         <div class="user-info">
             Bienvenido, <?php echo $nombre_completo; ?> 
-            (<a href="logout.php">Cerrar sesión</a>)
+            <a href="logout.php">Cerrar sesión</a>
         </div>
 
         <div class="form-container">
@@ -310,7 +310,7 @@ if ($result->num_rows > 0) {
                     <textarea id="descripcion" name="descripcion" class="form-control" required><?php 
                         echo isset($_POST['descripcion']) ? $_POST['descripcion'] : ''; 
                     ?></textarea>
-                    <small class="text-muted">Mínimo 20 caracteres. Describe con detalle tus sospechas.</small>
+                    <textarea class="text-muted">Mínimo 20 caracteres. Describe con detalle tus sospechas.</textarea>
                 </div>
 
                 <button type="submit" class="btn btn-primary">Reportar Noticia</button>
