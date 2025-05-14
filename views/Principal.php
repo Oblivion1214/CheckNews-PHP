@@ -406,7 +406,7 @@ if ($result->num_rows > 0) {
             
             <div class="result-meta">
                 <div id="confidenceBadge" class="confidence-badge">
-                    Confianza del modelo: <span id="confidenceValue">0</span> de que sea <span id="result-header">0</span>
+                    Confianza del modelo: <span id="confidenceValue">0</span> de que sea <span id="resultIcon"></span>
                 </div>
             </div>
 
