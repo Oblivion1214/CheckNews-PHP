@@ -345,17 +345,14 @@ if ($result->num_rows > 0) {
     <!-- Barra lateral -->
     <div class="sidebar">
         <div class="logo-container">
-            <img src="imag/CheckNews.png" alt="Logo" class="logo">
-            <h2>Check News</h2>
+            <img src="CheckNews.png" alt="Logo">
+            <h2>CheckNews</h2>
         </div>
         <ul>
-            <li><a href="Principal.php"><i class="fas fa-home"></i> Inicio</a></li>
-            <li><a href="verificados.php"><i class="fas fa-check-circle"></i> Noticias verificadas</a></li>
-            <li><a href="herramientas.php" class="active"><i class="fas fa-tools"></i> Herramientas</a></li>
-            <li><a href="reportar.php"><i class="fas fa-flag"></i> Reportar noticia</a></li>
-            <?php if ($tipo_usuario === 'admin'): ?>
-                <li><a href="admin.php"><i class="fas fa-user-shield"></i> Panel Admin</a></li>
-            <?php endif; ?>
+            <li><a href="Principal.php"><i class="fas fa-compass"></i> Explorar</a></li>
+            <li><a href="verificados.php"><i class="fas fa-check-circle"></i> Noticias reportadas</a></li>
+            <li><a href="herramientas.php"><i class="fas fa-tools"></i> Herramientas de Ayuda</a></li>
+            <li><a href="reportar.php"><i class="fas fa-flag"></i> Reportar Noticia</a></li>
         </ul>
     </div>
 
