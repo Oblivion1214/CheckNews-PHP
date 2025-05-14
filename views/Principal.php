@@ -153,6 +153,21 @@ if ($result->num_rows > 0) {
             margin-bottom: 2rem;
         }
 
+        .reportContainer{
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
         .search-bar {
             display: flex;
             gap: 1rem;
@@ -427,12 +442,13 @@ if ($result->num_rows > 0) {
                 <span id="toggleText" class="toggle-text">Mostrar más</span>
             </div>
             <!-- Boton de reporte -->
-            <div id="reportContainer">
-                <button id="reportButton" class="report-button">
+            <div id="reportContainer" style="margin-top: 1.5rem; text-align: center;">
+                <button id="reportButton" class="report-button" >
                     <i class="fas fa-flag"></i> Reportar Noticia
                 </button>
             </div>
         </div>
+
         <!-- Estado de carga -->
         <div id="loadingState" class="loading" style="display: none;">
             <div class="spinner"></div>
