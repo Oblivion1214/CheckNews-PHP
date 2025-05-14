@@ -19,7 +19,6 @@ $result = $stmt->get_result();
 if ($result->num_rows > 0) {
     $user = $result->fetch_assoc();
     $nombre_completo = htmlspecialchars($user['nombre'] . ' ' . $user['apellido_paterno']);
-    $tipo_usuario = $user['tipo_usuario'];
 } else {
     // Si no encuentra el usuario, cerrar sesión
     session_destroy();
