@@ -2,35 +2,74 @@
 include 'config.php';
 session_start();
 
-// Verificar si el usuario está logueado
+// 1) Verificar sesión
 if (!isset($_SESSION['usuarioID'])) {
     header("Location: login.php");
     exit();
 }
 
-// Obtener información del usuario
+// 2) Obtener nombre completo
 $user_id = $_SESSION['usuarioID'];
-$sql = "SELECT nombre, apellido_paterno FROM usuarios WHERE id = ?";
-$stmt = $connection->prepare($sql);
+$stmt = $connection->prepare("SELECT nombre, apellido_paterno FROM usuarios WHERE id = ?");
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
-$result = $stmt->get_result();
-
-if ($result->num_rows > 0) {
-    $user = $result->fetch_assoc();
-    $nombre_completo = htmlspecialchars($user['nombre'] . ' ' . $user['apellido_paterno']);
-} else {
-    // Si no existe el usuario en BD pero tenía sesión, limpiar todo
+$res = $stmt->get_result();
+if ($res->num_rows === 0) {
     session_destroy();
     header("Location: login.php");
     exit();
 }
+$user = $res->fetch_assoc();
+$nombre_completo = htmlspecialchars($user['nombre'] . ' ' . $user['apellido_paterno'], ENT_QUOTES);
+$stmt->close();
 
-// Consulta para obtener noticias verificadas
-$sql_noticias = "SELECT * FROM reportes_noticias_falsas ORDER BY fecha_reporte DESC";
-$result_noticias = $connection->query($sql_noticias);
+// 3) Construir consulta base: solo revisados
+$sql  = "SELECT * FROM reportes_noticias_falsas WHERE estatus = 'revisado'";
+$types = "";
+$params = [];
 
+// 4) Filtro búsqueda en texto o comentario
+if (!empty($_GET['q'])) {
+    $q = "%{$_GET['q']}%";
+    $sql .= " AND (noticia_texto LIKE ? OR comentario LIKE ?)";
+    $types .= "ss";
+    $params[] = $q;
+    $params[] = $q;
+}
+
+// 5) Filtro por fecha exacta (fecha_reporte)
+if (!empty($_GET['fecha'])) {
+    $sql .= " AND DATE(fecha_reporte) = ?";
+    $types .= "s";
+    $params[] = $_GET['fecha'];
+}
+
+// 6) Filtro por categoría
+if (!empty($_GET['categoria']) && $_GET['categoria'] !== 'all') {
+    $sql .= " AND categoria = ?";
+    $types .= "s";
+    $params[] = $_GET['categoria'];
+}
+
+// 7) Filtro por veracidad (resultado)
+if (!empty($_GET['veracidad']) && $_GET['veracidad'] !== 'all') {
+    $val = ($_GET['veracidad'] === 'verdadero') ? 'Noticia Verdadera' : 'Noticia Falsa';
+    $sql .= " AND resultado = ?";
+    $types .= "s";
+    $params[] = $val;
+}
+
+$sql .= " ORDER BY fecha_reporte DESC";
+
+// 8) Preparar y ejecutar
+$stmt = $connection->prepare($sql);
+if ($types) {
+    $stmt->bind_param($types, ...$params);
+}
+$stmt->execute();
+$result = $stmt->get_result();
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -260,148 +299,69 @@ $result_noticias = $connection->query($sql_noticias);
         }
     </style>
 </head>
+
 <body>
-    <!-- Barra lateral -->
-    <div class="sidebar">
-        <div class="logo-container">
-            <img src="CheckNews.png" alt="Logo">
-            <h2>CheckNews</h2>
-        </div>
-        <ul>
-            <li><a href="Principal.php"><i class="fas fa-compass"></i> Explorar</a></li>
-            <li><a href="verificados.php"><i class="fas fa-check-circle"></i> Noticias reportadas</a></li>
-            <li><a href="herramientas.php"><i class="fas fa-tools"></i> Herramientas de Ayuda</a></li>
-            <li><a href="reportar.php"><i class="fas fa-flag"></i> Reportar Noticia</a></li>
-        </ul>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="logo-container">
+      <img src="CheckNews.png" alt="Logo">
+      <h2>CheckNews</h2>
+    </div>
+    <ul>
+      <li><a href="Principal.php">Explorar</a></li>
+      <li><a href="verificados.php" class="active">Noticias revisadas</a></li>
+      <li><a href="herramientas.php">Herramientas de Ayuda</a></li>
+      <li><a href="reportar.php">Reportar Noticia</a></li>
+    </ul>
+  </div>
+
+  <!-- Contenido principal -->
+  <div class="content">
+    <div class="user-info">
+      Bienvenido, <?php echo $nombre_completo; ?> (<a href="logout.php">Cerrar sesión</a>)
     </div>
 
-    <!-- Contenedor principal -->
-    <div class="content">
-        <!-- Información del usuario -->
-        <div class="user-info">
-            Bienvenido, <?php echo $nombre_completo; ?> 
-            (<a href="logout.php">Cerrar sesión</a>)
-        </div>
+    <!-- Filtros y búsqueda -->
+    <form method="GET" class="filters">
+      <input type="text" name="q" placeholder="Buscar texto o comentario" value="<?php echo htmlspecialchars($_GET['q'] ?? '', ENT_QUOTES); ?>">
+      <input type="date" name="fecha" value="<?php echo htmlspecialchars($_GET['fecha'] ?? '', ENT_QUOTES); ?>">
+      <select name="categoria">
+        <option value="all">Todas categorías</option>
+        <?php 
+          $cats = ['cancer'=>'Cáncer','diabetes'=>'Diabetes','asma'=>'Asma','hipertension'=>'Hipertensión',
+                   'obesidad'=>'Obesidad','cardiovasculares'=>'Cardiovasculares','otros'=>'Otros'];
+          foreach($cats as $k=>$label){
+            $sel = (($_GET['categoria'] ?? '') === $k) ? 'selected':''; 
+            echo "<option value=\"$k\" $sel>$label</option>";
+          }
+        ?>
+      </select>
+      <select name="veracidad">
+        <option value="all">Todas veracidades</option>
+        <option value="verdadero" <?php if(($_GET['veracidad']??'')==='verdadero') echo 'selected'; ?>>Noticia Verdadera</option>
+        <option value="falso" <?php if(($_GET['veracidad']??'')==='falso') echo 'selected'; ?>>Noticia Falsa</option>
+      </select>
+      <button type="submit">Filtrar</button>
+    </form>
 
-        <!-- Formulario de búsqueda -->
-        <div class="search-container">
-            <h1>Consulta de Noticias Verificadas</h1>
-            <form id="search-form" method="GET" action="">
-                <input type="text" id="search-input" name="q" placeholder="Ingrese una palabra clave, frase o enlace..." 
-                    value="<?php echo isset($_GET['q']) ? htmlspecialchars($_GET['q']) : ''; ?>">
-                <button type="submit">Buscar</button>
-            </form>
-        </div>
-
-        <!-- Filtros -->
-        <div class="filters">
-            <div class="filter-group">
-                <label for="date-filter">Fecha:</label>
-                <input type="date" id="date-filter" name="fecha" 
-                    value="<?php echo isset($_GET['fecha']) ? htmlspecialchars($_GET['fecha']) : ''; ?>">
+    <!-- Resultados -->
+    <div class="results">
+      <?php if($result->num_rows): ?>
+        <?php while($row = $result->fetch_assoc()): ?>
+          <div class="result-item">
+            <h3><?php echo htmlspecialchars($row['resultado'], ENT_QUOTES); ?></h3>
+            <p><strong>Noticia:</strong> <?php echo nl2br(htmlspecialchars($row['noticia_texto'], ENT_QUOTES)); ?></p>
+            <p><strong>Comentario:</strong> <?php echo nl2br(htmlspecialchars($row['comentario'], ENT_QUOTES)); ?></p>
+            <div class="result-meta">
+              <span class="result-date"><?php echo date('d/m/Y H:i', strtotime($row['fecha_reporte'])); ?></span>
+              <span class="result-category"><?php echo htmlspecialchars(ucfirst($row['categoria']), ENT_QUOTES); ?></span>
             </div>
-            
-            <div class="filter-group">
-                <label for="category-filter">Categoría:</label>
-                <select id="category-filter" name="categoria">
-                    <option value="all">Todas</option>
-                    <option value="cancer" <?php echo (isset($_GET['categoria']) && $_GET['categoria'] == 'cancer') ? 'selected' : ''; ?>>Cancer</option>
-                    <option value="diabetes" <?php echo (isset($_GET['categoria']) && $_GET['categoria'] == 'diabetes') ? 'selected' : ''; ?>>Diabetes</option>
-                    <option value="asma" <?php echo (isset($_GET['categoria']) && $_GET['categoria'] == 'asma') ? 'selected' : ''; ?>>Asma</option>
-                    <option value="hipertension" <?php echo (isset($_GET['categoria']) && $_GET['categoria'] == 'hipertension') ? 'selected' : ''; ?>>Hipertension</option>
-                    <option value="obesidad" <?php echo (isset($_GET['categoria']) && $_GET['categoria'] == 'obesidad') ? 'selected' : ''; ?>>Obesidad</option>
-                    <option value="cardiovasculares" <?php echo (isset($_GET['categoria']) && $_GET['categoria'] == 'cardiovasculares') ? 'selected' : ''; ?>>Cardiovasculares</option>
-                    <option value="otros" <?php echo (isset($_GET['categoria']) && $_GET['categoria'] == 'otros') ? 'selected' : ''; ?>>Otros</option>
-                </select>
-            </div>
-            
-            <div class="filter-group">
-                <label for="result-filter">Veracidad:</label>
-                <select id="result-filter" name="veracidad">
-                    <option value="all">Todos</option>
-                    <option value="verdadero" <?php echo (isset($_GET['veracidad']) && $_GET['veracidad'] == 'verdadero') ? 'selected' : ''; ?>>Verdadero</option>
-                    <option value="falso" <?php echo (isset($_GET['veracidad']) && $_GET['veracidad'] == 'falso') ? 'selected' : ''; ?>>Falso</option>
-                </select>
-            </div>
-        </div>
-
-        <!-- Resultados -->
-        <div class="results">
-            <h2>Resultados encontrados</h2>
-            <div id="results-list">
-                <?php
-                // Construir consulta con filtros
-                $sql = "SELECT * FROM reportes_noticias_falsas WHERE 1=1";
-                $params = [];
-                $types = "";
-                
-                if (isset($_GET['q']) && !empty($_GET['q'])) {
-                    $search = "%" . $_GET['q'] . "%";
-                    $sql .= " AND (titulo LIKE ? OR contenido LIKE ? OR fuente LIKE ?)";
-                    array_push($params, $search, $search, $search);
-                    $types .= "sss";
-                }
-                
-                if (isset($_GET['fecha']) && !empty($_GET['fecha'])) {
-                    $sql .= " AND DATE(fecha_reporte) = ?";
-                    array_push($params, $_GET['fecha']);
-                    $types .= "s";
-                }
-                
-                if (isset($_GET['categoria']) && $_GET['categoria'] != 'all') {
-                    $sql .= " AND categoria = ?";
-                    array_push($params, $_GET['categoria']);
-                    $types .= "s";
-                }
-                
-                if (isset($_GET['veracidad']) && $_GET['veracidad'] != 'all') {
-                    $sql .= " AND veracidad = ?";
-                    array_push($params, $_GET['veracidad'] == 'verdadero' ? 1 : 0);
-                    $types .= "i";
-                }
-                
-                $sql .= " ORDER BY fecha_reporte DESC";
-                
-                // Ejecutar consulta
-                $stmt = $connection->prepare($sql);
-                if ($params) {
-                    $stmt->bind_param($types, ...$params);
-                }
-                $stmt->execute();
-                $result = $stmt->get_result();
-                
-                if ($result->num_rows > 0) {
-                    while ($row = $result->fetch_assoc()) {
-                        echo '<div class="result-item">';
-                        echo '<h3>' . htmlspecialchars($row['titulo']) . '</h3>';
-                        echo '<p>' . htmlspecialchars($row['contenido']) . '</p>';
-                        echo '<div class="result-meta">';
-                        echo '<span class="result-date">' . date('d/m/Y', strtotime($row['fecha_publicacion'])) . '</span>';
-                        echo '<span class="result-category">' . htmlspecialchars(ucfirst($row['categoria'])) . '</span>';
-                        echo '<span class="verification-' . ($row['veracidad'] ? 'true">Verdadero' : 'false">Falso') . '</span>';
-                        echo '</div>';
-                        echo '</div>';
-                    }
-                } else {
-                    echo '<div class="no-results">No se encontraron noticias con los criterios de búsqueda.</div>';
-                }
-                ?>
-            </div>
-        </div>
+          </div>
+        <?php endwhile; ?>
+      <?php else: ?>
+        <div class="no-results">No hay noticias revisadas con esos criterios.</div>
+      <?php endif; ?>
     </div>
-
-    <script>
-        // Función para manejar la búsqueda con filtros
-        document.getElementById('search-form').addEventListener('submit', function(e) {
-            // Los filtros ya se manejan en el formulario con los campos name
-        });
-        
-        // Mejorar la experiencia de usuario en móviles
-        if (window.innerWidth <= 768) {
-            document.querySelectorAll('.filter-group select, .filter-group input').forEach(el => {
-                el.style.width = '100%';
-            });
-        }
-    </script>
+  </div>
 </body>
 </html>
