@@ -25,8 +25,8 @@ if ($result->num_rows > 0) {
     header("Location: login.php");
     exit();
 }
-?>
 
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>

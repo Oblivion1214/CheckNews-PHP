@@ -2,15 +2,15 @@
 include 'config.php';
 session_start();
 
-// Verificar si el usuario está logueado (usando la variable de sesión que establece login.php)
+// Verificar si el usuario está logueado
 if (!isset($_SESSION['usuarioID'])) {
     header("Location: login.php");
     exit();
 }
 
-// Obtener información del usuario desde la base de datos
+// Obtener información del usuario
 $user_id = $_SESSION['usuarioID'];
-$sql = "SELECT nombre, apellido_paterno, tipo_usuario FROM usuarios WHERE id = ?";
+$sql = "SELECT nombre, apellido_paterno FROM usuarios WHERE id = ?";
 $stmt = $connection->prepare($sql);
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
@@ -19,9 +19,8 @@ $result = $stmt->get_result();
 if ($result->num_rows > 0) {
     $user = $result->fetch_assoc();
     $nombre_completo = htmlspecialchars($user['nombre'] . ' ' . $user['apellido_paterno']);
-    $tipo_usuario = $user['tipo_usuario'];
 } else {
-    // Si no encuentra el usuario, cerrar sesión
+    // Si no existe el usuario en BD pero tenía sesión, limpiar todo
     session_destroy();
     header("Location: login.php");
     exit();
