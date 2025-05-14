@@ -253,14 +253,6 @@ if ($result->num_rows > 0) {
 
         <div class="form-container">
             <h1 class="form-title">Reportar Noticia Dudosa</h1>
-            
-            <?php if ($mensaje): ?>
-                <div class="alert alert-success"><?php echo $mensaje; ?></div>
-            <?php endif; ?>
-            
-            <?php if ($error): ?>
-                <div class="alert alert-error"><?php echo $error; ?></div>
-            <?php endif; ?>
 
             <form method="POST" action="reportar.php">
                 <div class="form-group">

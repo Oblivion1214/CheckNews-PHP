@@ -407,7 +407,7 @@ if ($result->num_rows > 0) {
             
             <div class="result-meta">
                 <div id="confidenceBadge" class="confidence-badge">
-                    Porcentaje de confianza del modelo: <span id="confidenceValue">0</span>%
+                    Porcentaje de confianza del modelo: <span id="confidenceValue">0</span>
                 </div>
                 <p id="confidenceExplanation" class="confidence-explanation" style="display: none;"></p>
             </div>
