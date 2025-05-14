@@ -403,10 +403,10 @@ elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     class="form-control" rows="5" required><?php
             echo htmlspecialchars($_POST['comentario'] ?? '', ENT_QUOTES);
           ?></textarea>
-          <small class="text-muted">
+        </div>
+        <small class="text-muted">
             Mínimo 20 caracteres. Describe con detalle tus sospechas.
           </small>
-        </div>
 
         <button type="submit" class="btn btn-primary">
           <i class="fas fa-flag"></i> Reportar Noticia
