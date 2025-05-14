@@ -406,9 +406,12 @@ if ($result->num_rows > 0) {
             
             <div class="result-meta">
                 <div id="confidenceBadge" class="confidence-badge">
-                    Confianza del modelo: <span id="confidenceValue">0</span>
+                    Confianza del modelo: <span id="confidenceValue">0</span>%
                 </div>
             </div>
+            <!-- Nuevo: explicación de confianza -->
+            <p id="confidenceExplanation" class="confidence-explanation" style="display: none;"></p>
+
 
             <div id="resultUrlContainer" style="display: none;">
                 <p><strong>URL analizada:</strong> <a id="resultUrl" class="result-url" target="_blank"></a></p>
@@ -486,6 +489,7 @@ if ($result->num_rows > 0) {
                 // Procesar resultados
                 const isFake = result.Prediccion === 0 || result.prediccion === 0;
                 const confidence = result.Confianza || result.confianza;
+                const explanation = result.explicacion_confianza || result.explicacion_confianza || '';
                 const extractedText = result.texto_extraido || result.Noticia || '';
                 const title = result.Titulo || '';
                 const url = result.url || '';
@@ -516,7 +520,14 @@ if ($result->num_rows > 0) {
 
                 // Establecer confianza
                 confidenceValue.textContent = `${confidence}%`;
-
+                const confidenceExplanation = document.getElementById('confidenceExplanation');
+                // Establecer badge de confianza
+                if (explanation) {
+                    confidenceExplanation.textContent = explanation;
+                    confidenceExplanation.style.display = 'block';
+                } else {
+                    confidenceExplanation.style.display = 'none';
+                }
 
                 // Mostrar URL si existe
                 if (url) {
