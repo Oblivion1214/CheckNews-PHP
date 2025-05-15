@@ -497,6 +497,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             .form-scroll-container {
                 padding: 0 20px 20px;
             }
+
+            /* Modal */
+            .modal {
+            display: none; /* Oculto por defecto */
+            position: fixed;
+            z-index: 1000;
+            left: 0; top: 0;
+            width: 100%; height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.5);
+            }
+            .modal-content {
+            background: #fff;
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            }
+            .close {
+            float: right;
+            font-size: 1.5rem;
+            cursor: pointer;
+            }
+            .terms-text {
+            max-height: 60vh;
+            overflow-y: auto;
+            margin-top: 1rem;
+            }
         }
     </style>
 </head>
@@ -578,13 +608,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </div>
 
                     <div class="form-section">
-                        <div class="terms">
-                            <label class="checkbox-container">
-                                <input type="checkbox" id="terms" required>
-                                <span class="checkmark"></span>
-                                Acepto los <a href="#"> términos y condiciones</a>
-                            </label>
-                        </div>
+                    <div class="terms">
+                        <label class="checkbox-container">
+                        <input type="checkbox" id="terms" required>
+                        <span class="checkmark"></span>
+                        Acepto los 
+                        <a href="javascript:void(0)" id="showTerms">términos y condiciones</a>
+                        </label>
+                    </div>
                         
                         <button type="submit" class="register-btn">
                             <span>Registrarse</span>
@@ -602,6 +633,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="circle circle-2"></div>
             <div class="circle circle-3"></div>
         </div>
+
+            <!-- Modal Términos y Condiciones -->
+            <div id="termsModal" class="modal">
+            <div class="modal-content">
+                <span id="closeTerms" class="close">&times;</span>
+                <h2>Términos y Condiciones</h2>
+                <div class="terms-text">
+                <p>Bienvenido a nuestra plataforma. Antes de continuar, por favor lee atentamente estos términos...</p>
+                <!-- Aquí tus T&C completas -->
+                </div>
+            </div>
+            </div>
     </div>
 
     <script>
@@ -638,6 +681,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     this.parentNode.classList.remove('focused');
                 }
             });
+        });
+
+        // Modal T&C
+        const modal = document.getElementById('termsModal');
+        const showBtn = document.getElementById('showTerms');
+        const closeBtn = document.getElementById('closeTerms');
+
+        showBtn.addEventListener('click', () => modal.style.display = 'block');
+        closeBtn.addEventListener('click', () => modal.style.display = 'none');
+        window.addEventListener('click', e => {
+        if (e.target === modal) modal.style.display = 'none';
         });
 
         // Validación del formulario antes de enviar
