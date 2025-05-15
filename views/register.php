@@ -582,7 +582,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <label class="checkbox-container">
                                 <input type="checkbox" id="terms" required>
                                 <span class="checkmark"></span>
-                                Acepto los <a href="#">términos y condiciones</a>
+                                Acepto los <a href="#"> términos y condiciones</a>
                             </label>
                         </div>
                         
