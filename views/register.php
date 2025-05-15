@@ -455,6 +455,111 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             background: rgba(102, 126, 234, 0.7);
         }
 
+        /* Modal de Términos y Condiciones */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            overflow: hidden;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 700px;
+            box-shadow: 0 5px 30px rgba(0,0,0,0.3);
+            max-height: 80vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .modal-header h2 {
+            color: #333;
+            font-size: 24px;
+            margin: 0;
+        }
+
+        .close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close:hover {
+            color: #333;
+        }
+
+        .terms-content {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 10px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .terms-content h3 {
+            color: #667eea;
+            margin: 20px 0 10px;
+            font-size: 18px;
+        }
+
+        .terms-content p {
+            margin-bottom: 15px;
+        }
+
+        .terms-content ul {
+            margin-bottom: 15px;
+            padding-left: 20px;
+        }
+
+        .terms-content li {
+            margin-bottom: 8px;
+        }
+
+        /* Scrollbar para el contenido de términos */
+        .terms-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .terms-content::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .terms-content::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 10px;
+        }
+
+        .terms-content::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
         @media (max-width: 768px) {
             .register-container {
                 height: 95vh;
@@ -472,6 +577,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             
             .form-scroll-container {
                 padding: 0 25px 25px;
+            }
+
+            .modal-content {
+                width: 95%;
+                margin: 10% auto;
+                padding: 20px;
             }
         }
 
@@ -498,34 +609,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 padding: 0 20px 20px;
             }
 
-            /* Modal */
-            .modal {
-            display: none; /* Oculto por defecto */
-            position: fixed;
-            z-index: 1000;
-            left: 0; top: 0;
-            width: 100%; height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.5);
+            .modal-header h2 {
+                font-size: 20px;
             }
-            .modal-content {
-            background: #fff;
-            margin: 5% auto;
-            padding: 2rem;
-            border-radius: 8px;
-            width: 90%;
-            max-width: 600px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            }
-            .close {
-            float: right;
-            font-size: 1.5rem;
-            cursor: pointer;
-            }
-            .terms-text {
-            max-height: 60vh;
-            overflow-y: auto;
-            margin-top: 1rem;
+
+            .terms-content {
+                font-size: 14px;
             }
         }
     </style>
@@ -608,13 +697,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </div>
 
                     <div class="form-section">
-                    <div class="terms">
-                        <label class="checkbox-container">
-                        <input type="checkbox" id="terms" required>
-                        <span class="checkmark"></span>
-                        Acepto los <a href="#termsModal" id="showTerms">términos y condiciones</a>
-                        </label>
-                    </div>
+                        <div class="terms">
+                            <label class="checkbox-container">
+                                <input type="checkbox" id="terms" required>
+                                <span class="checkmark"></span>
+                                Acepto los <a href="#" id="showTerms"> términos y condiciones</a>
+                            </label>
+                        </div>
                         
                         <button type="submit" class="register-btn">
                             <span>Registrarse</span>
@@ -633,55 +722,60 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="circle circle-3"></div>
         </div>
 
-            <!-- Modal Términos y Condiciones -->
-            <div id="termsModal" class="modal">
+        <!-- Modal Términos y Condiciones -->
+        <div id="termsModal" class="modal">
             <div class="modal-content">
-                <span id="closeTerms" class="close">&times;</span>
-                <h2>Términos y Condiciones de CheckNews</h2>
-                <div class="terms-text">
-                <p>Bienvenido a CheckNews, un sistema automatizado diseñado para detectar noticias falsas sobre salud utilizando Machine Learning y Procesamiento del Lenguaje Natural (NLP). Al acceder y utilizar nuestra plataforma web, usted acepta cumplir y estar sujeto a los siguientes términos y condiciones de uso. Si no está de acuerdo con estos términos, no debe utilizar CheckNews.</p>
-                
-                1. Descripción del Servicio
-                CheckNews es una herramienta que permite a los usuarios verificar la autenticidad de noticias relacionadas con la salud mediante el análisis automatizado de texto o enlaces.  El sistema utiliza algoritmos de Machine Learning y Procesamiento del Lenguaje Natural para clasificar las noticias   y consulta una base de datos de noticias previamente verificadas.  Los usuarios también pueden consultar el historial de noticias verificadas almacenadas en la base de datos.
-
-                2. Limitaciones y Precisión de la Información
-                CheckNews se enfoca inicialmente en la detección de noticias falsas sobre temas de salud y principalmente de temas ya existentes.
-                La verificación se basa en modelos de Machine Learning y NLP, cuya efectividad depende de la calidad y diversidad de los datos de entrenamiento.
-                La precisión del sistema puede ser limitada al enfrentarse a noticias completamente nuevas, estructuras de lenguaje no vistas previamente o al intentar identificar sátira o humor.
-                La información proporcionada por CheckNews es el resultado de un análisis automatizado y no debe considerarse como un juicio definitivo o una verdad absoluta. No sustituye el consejo de profesionales de la salud o la verificación manual exhaustiva por parte de expertos.
-                CheckNews puede no ofrecer el mismo nivel de análisis profundo en temas específicos que algunas plataformas de verificación manual. Tampoco aborda nichos especializados como la verificación de declaraciones políticas con el mismo enfoque que otras herramientas.
-
-                3. Conducta del Usuario
-                Usted se compromete a utilizar CheckNews únicamente para fines lícitos y de acuerdo con estos términos. Usted no debe:
-                Utilizar la plataforma para difundir información falsa o engañosa intencionalmente.
-                Intentar interferir con el funcionamiento de CheckNews o el análisis de datos.
-                Enviar contenido ilegal, dañino, amenazante, abusivo, acosador, difamatorio, vulgar, obsceno, o racial, étnica o de otra manera objetable.
-                Intentar acceder sin autorización a los sistemas o bases de datos de CheckNews.
-
-                4. Propiedad Intelectual
-                La plataforma CheckNews, sus algoritmos, bases de datos y contenido (excluyendo el contenido enviado por los usuarios) son propiedad del Instituto Tecnológico Toluca y los creadores del proyecto  y están protegidos por las leyes de propiedad intelectual.
-
-                5. Descargo de Responsabilidad de Garantías
-                CheckNews se proporciona "tal cual" y "según disponibilidad" sin garantías de ningún tipo, ya sean expresas o implícitas. No garantizamos que la plataforma será ininterrumpida, libre de errores o completamente segura.
-
-                6. Limitación de Responsabilidad
-                En la medida máxima permitida por la ley, CheckNews y sus creadores no serán responsables de ningún daño directo, indirecto, incidental, especial, consecuente o punitivo que resulte del uso o la imposibilidad de usar la plataforma o de la información obtenida a través de ella.  El usuario reconoce que las decisiones basadas en información falsa pueden tener consecuencias peligrosas, y CheckNews es solo una herramienta de apoyo en el proceso de verificación.
-
-
-                7. Privacidad
-                El manejo de datos en CheckNews cumple con protocolos de seguridad y busca minimizar sesgos en los modelos. Al utilizar la plataforma, usted acepta el tratamiento de sus datos según se describe en nuestra Política de Privacidad (la cual se presentará por separado).  Se buscará obtener consentimiento explícito de los usuarios y se cumplirán las normativas vigentes sobre protección de datos.
-
-                8. Consideraciones Legales y Éticas
-                CheckNews opera en un marco legal mexicano que incluye el Derecho de Réplica  , la responsabilidad civil por difusión de información falsa   y la Ley Olimpia contra la violencia digital.  Aunque la plataforma busca combatir la desinformación  , el panorama legal mexicano en cuanto a la regulación específica de la inteligencia artificial en ciertos usos aún está en desarrollo.  La transparencia en el manejo de la información es fundamental para evitar la censura o discriminación.
-
-                9. Modificaciones a los Términos
-                Nos reservamos el derecho de modificar estos términos y condiciones en cualquier momento. Se le notificará sobre los cambios importantes. Su uso continuado de la plataforma después de dichas modificaciones constituye su aceptación de los nuevos términos.
-
-                10. Ley Aplicable
-                Estos términos y condiciones se rigen e interpretan de acuerdo con las leyes de México.
+                <div class="modal-header">
+                    <h2>Términos y Condiciones de CheckNews</h2>
+                    <span class="close">&times;</span>
+                </div>
+                <div class="terms-content">
+                    <p>Bienvenido a CheckNews, un sistema automatizado diseñado para detectar noticias falsas sobre salud utilizando Machine Learning y Procesamiento del Lenguaje Natural (NLP). Al acceder y utilizar nuestra plataforma web, usted acepta cumplir y estar sujeto a los siguientes términos y condiciones de uso. Si no está de acuerdo con estos términos, no debe utilizar CheckNews.</p>
+                    
+                    <h3>1. Descripción del Servicio</h3>
+                    <p>CheckNews es una herramienta que permite a los usuarios verificar la autenticidad de noticias relacionadas con la salud mediante el análisis automatizado de texto o enlaces. El sistema utiliza algoritmos de Machine Learning y Procesamiento del Lenguaje Natural para clasificar las noticias y consulta una base de datos de noticias previamente verificadas. Los usuarios también pueden consultar el historial de noticias verificadas almacenadas en la base de datos.</p>
+                    
+                    <h3>2. Limitaciones y Precisión de la Información</h3>
+                    <ul>
+                        <li>CheckNews se enfoca inicialmente en la detección de noticias falsas sobre temas de salud y principalmente de temas ya existentes.</li>
+                        <li>La verificación se basa en modelos de Machine Learning y NLP, cuya efectividad depende de la calidad y diversidad de los datos de entrenamiento.</li>
+                        <li>La precisión del sistema puede ser limitada al enfrentarse a noticias completamente nuevas, estructuras de lenguaje no vistas previamente o al intentar identificar sátira o humor.</li>
+                        <li>La información proporcionada por CheckNews es el resultado de un análisis automatizado y no debe considerarse como un juicio definitivo o una verdad absoluta. No sustituye el consejo de profesionales de la salud o la verificación manual exhaustiva por parte de expertos.</li>
+                        <li>CheckNews puede no ofrecer el mismo nivel de análisis profundo en temas específicos que algunas plataformas de verificación manual.</li>
+                    </ul>
+                    
+                    <h3>3. Conducta del Usuario</h3>
+                    <p>Usted se compromete a utilizar CheckNews únicamente para fines lícitos y de acuerdo con estos términos. Usted no debe:</p>
+                    <ul>
+                        <li>Utilizar la plataforma para difundir información falsa o engañosa intencionalmente.</li>
+                        <li>Intentar interferir con el funcionamiento de CheckNews o el análisis de datos.</li>
+                        <li>Enviar contenido ilegal, dañino, amenazante, abusivo, acosador, difamatorio, vulgar, obsceno, o racial, étnica o de otra manera objetable.</li>
+                        <li>Intentar acceder sin autorización a los sistemas o bases de datos de CheckNews.</li>
+                    </ul>
+                    
+                    <h3>4. Propiedad Intelectual</h3>
+                    <p>La plataforma CheckNews, sus algoritmos, bases de datos y contenido (excluyendo el contenido enviado por los usuarios) son propiedad del Instituto Tecnológico Toluca y los creadores del proyecto y están protegidos por las leyes de propiedad intelectual.</p>
+                    
+                    <h3>5. Descargo de Responsabilidad de Garantías</h3>
+                    <p>CheckNews se proporciona "tal cual" y "según disponibilidad" sin garantías de ningún tipo, ya sean expresas o implícitas. No garantizamos que la plataforma será ininterrumpida, libre de errores o completamente segura.</p>
+                    
+                    <h3>6. Limitación de Responsabilidad</h3>
+                    <p>En la medida máxima permitida por la ley, CheckNews y sus creadores no serán responsables de ningún daño directo, indirecto, incidental, especial, consecuente o punitivo que resulte del uso o la imposibilidad de usar la plataforma o de la información obtenida a través de ella. El usuario reconoce que las decisiones basadas en información falsa pueden tener consecuencias peligrosas, y CheckNews es solo una herramienta de apoyo en el proceso de verificación.</p>
+                    
+                    <h3>7. Privacidad</h3>
+                    <p>El manejo de datos en CheckNews cumple con protocolos de seguridad y busca minimizar sesgos en los modelos. Al utilizar la plataforma, usted acepta el tratamiento de sus datos según se describe en nuestra Política de Privacidad (la cual se presentará por separado). Se buscará obtener consentimiento explícito de los usuarios y se cumplirán las normativas vigentes sobre protección de datos.</p>
+                    
+                    <h3>8. Consideraciones Legales y Éticas</h3>
+                    <p>CheckNews opera en un marco legal mexicano que incluye el Derecho de Réplica, la responsabilidad civil por difusión de información falsa y la Ley Olimpia contra la violencia digital. Aunque la plataforma busca combatir la desinformación, el panorama legal mexicano en cuanto a la regulación específica de la inteligencia artificial en ciertos usos aún está en desarrollo. La transparencia en el manejo de la información es fundamental para evitar la censura o discriminación.</p>
+                    
+                    <h3>9. Modificaciones a los Términos</h3>
+                    <p>Nos reservamos el derecho de modificar estos términos y condiciones en cualquier momento. Se le notificará sobre los cambios importantes. Su uso continuado de la plataforma después de dichas modificaciones constituye su aceptación de los nuevos términos.</p>
+                    
+                    <h3>10. Ley Aplicable</h3>
+                    <p>Estos términos y condiciones se rigen e interpretan de acuerdo con las leyes de México.</p>
                 </div>
             </div>
-            </div>
+        </div>
     </div>
 
     <script>
@@ -720,15 +814,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             });
         });
 
-        // Modal T&C
+        // Modal Términos y Condiciones
         const modal = document.getElementById('termsModal');
         const showBtn = document.getElementById('showTerms');
-        const closeBtn = document.getElementById('closeTerms');
+        const closeBtn = document.querySelector('.close');
 
-        showBtn.addEventListener('click', () => modal.style.display = 'block');
-        closeBtn.addEventListener('click', () => modal.style.display = 'none');
-        window.addEventListener('click', e => {
-        if (e.target === modal) modal.style.display = 'none';
+        showBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        });
+
+        closeBtn.addEventListener('click', function() {
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        });
+
+        window.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
         });
 
         // Validación del formulario antes de enviar
