@@ -612,8 +612,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <label class="checkbox-container">
                         <input type="checkbox" id="terms" required>
                         <span class="checkmark"></span>
-                        Acepto los 
-                        <a href="javascript:void(0)" id="showTerms">términos y condiciones</a>
+                        Acepto los <a href="javascript:void(0)" id="showTerms">términos y condiciones</a>
                         </label>
                     </div>
                         
@@ -638,10 +637,49 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div id="termsModal" class="modal">
             <div class="modal-content">
                 <span id="closeTerms" class="close">&times;</span>
-                <h2>Términos y Condiciones</h2>
+                <h2>Términos y Condiciones de CheckNews</h2>
                 <div class="terms-text">
                 <p>Bienvenido a nuestra plataforma. Antes de continuar, por favor lee atentamente estos términos...</p>
-                <!-- Aquí tus T&C completas -->
+                Bienvenido a CheckNews, un sistema automatizado diseñado para detectar noticias falsas sobre salud utilizando Machine Learning y Procesamiento del Lenguaje Natural (NLP). Al acceder y utilizar nuestra plataforma web, usted acepta cumplir y estar sujeto a los siguientes términos y condiciones de uso. Si no está de acuerdo con estos términos, no debe utilizar CheckNews.
+
+                1. Descripción del Servicio
+                CheckNews es una herramienta que permite a los usuarios verificar la autenticidad de noticias relacionadas con la salud mediante el análisis automatizado de texto o enlaces.  El sistema utiliza algoritmos de Machine Learning y Procesamiento del Lenguaje Natural para clasificar las noticias   y consulta una base de datos de noticias previamente verificadas.  Los usuarios también pueden consultar el historial de noticias verificadas almacenadas en la base de datos.
+
+                2. Limitaciones y Precisión de la Información
+                CheckNews se enfoca inicialmente en la detección de noticias falsas sobre temas de salud y principalmente de temas ya existentes.
+                La verificación se basa en modelos de Machine Learning y NLP, cuya efectividad depende de la calidad y diversidad de los datos de entrenamiento.
+                La precisión del sistema puede ser limitada al enfrentarse a noticias completamente nuevas, estructuras de lenguaje no vistas previamente o al intentar identificar sátira o humor.
+                La información proporcionada por CheckNews es el resultado de un análisis automatizado y no debe considerarse como un juicio definitivo o una verdad absoluta. No sustituye el consejo de profesionales de la salud o la verificación manual exhaustiva por parte de expertos.
+                CheckNews puede no ofrecer el mismo nivel de análisis profundo en temas específicos que algunas plataformas de verificación manual. Tampoco aborda nichos especializados como la verificación de declaraciones políticas con el mismo enfoque que otras herramientas.
+
+                3. Conducta del Usuario
+                Usted se compromete a utilizar CheckNews únicamente para fines lícitos y de acuerdo con estos términos. Usted no debe:
+                Utilizar la plataforma para difundir información falsa o engañosa intencionalmente.
+                Intentar interferir con el funcionamiento de CheckNews o el análisis de datos.
+                Enviar contenido ilegal, dañino, amenazante, abusivo, acosador, difamatorio, vulgar, obsceno, o racial, étnica o de otra manera objetable.
+                Intentar acceder sin autorización a los sistemas o bases de datos de CheckNews.
+
+                4. Propiedad Intelectual
+                La plataforma CheckNews, sus algoritmos, bases de datos y contenido (excluyendo el contenido enviado por los usuarios) son propiedad del Instituto Tecnológico Toluca y los creadores del proyecto  y están protegidos por las leyes de propiedad intelectual.
+
+                5. Descargo de Responsabilidad de Garantías
+                CheckNews se proporciona "tal cual" y "según disponibilidad" sin garantías de ningún tipo, ya sean expresas o implícitas. No garantizamos que la plataforma será ininterrumpida, libre de errores o completamente segura.
+
+                6. Limitación de Responsabilidad
+                En la medida máxima permitida por la ley, CheckNews y sus creadores no serán responsables de ningún daño directo, indirecto, incidental, especial, consecuente o punitivo que resulte del uso o la imposibilidad de usar la plataforma o de la información obtenida a través de ella.  El usuario reconoce que las decisiones basadas en información falsa pueden tener consecuencias peligrosas, y CheckNews es solo una herramienta de apoyo en el proceso de verificación.
+
+
+                7. Privacidad
+                El manejo de datos en CheckNews cumple con protocolos de seguridad y busca minimizar sesgos en los modelos. Al utilizar la plataforma, usted acepta el tratamiento de sus datos según se describe en nuestra Política de Privacidad (la cual se presentará por separado).  Se buscará obtener consentimiento explícito de los usuarios y se cumplirán las normativas vigentes sobre protección de datos.
+
+                8. Consideraciones Legales y Éticas
+                CheckNews opera en un marco legal mexicano que incluye el Derecho de Réplica  , la responsabilidad civil por difusión de información falsa   y la Ley Olimpia contra la violencia digital.  Aunque la plataforma busca combatir la desinformación  , el panorama legal mexicano en cuanto a la regulación específica de la inteligencia artificial en ciertos usos aún está en desarrollo.  La transparencia en el manejo de la información es fundamental para evitar la censura o discriminación.
+
+                9. Modificaciones a los Términos
+                Nos reservamos el derecho de modificar estos términos y condiciones en cualquier momento. Se le notificará sobre los cambios importantes. Su uso continuado de la plataforma después de dichas modificaciones constituye su aceptación de los nuevos términos.
+
+                10. Ley Aplicable
+                Estos términos y condiciones se rigen e interpretan de acuerdo con las leyes de México.
                 </div>
             </div>
             </div>
