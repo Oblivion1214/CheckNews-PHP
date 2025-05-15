@@ -401,7 +401,10 @@ if ($result->num_rows > 0) {
         </div>
         <!-- Barra de búsqueda -->
         <div class="search-container">
-            <h2 style="margin-bottom: 1.5rem; color: #2c3e50;">Verificador de Noticias Medicas en español</h2>
+            <h2 style="margin-bottom: 1.5rem; color: #2c3e50;">Verificador de Noticias Medicas en Español</h2>
+                <p style="color: #7f8c8d; font-size: 0.9rem;">Actualmente el modelo solo cuenta con el soporte de deteccion para las siguientes noticias:
+                    Cáncer, Diabetes, Asma, Hipertensión, Obesidad, Enfermedades cardiovasculares
+                </p>
             <div class="search-bar">
                 <input type="text" id="newsInput" placeholder="Ingrese URL o Texto de la Noticia">
                 <button id="verifyButton">
@@ -465,7 +468,9 @@ if ($result->num_rows > 0) {
     <input type="hidden" name="action"          value="prefill">
     </form>
 
-
+        <p style="text-align:center; color:#e67e22; margin-top: 2rem; font-size: 0.95rem;">
+            <strong>Advertencia:</strong> CheckNews puede cometer errores. Comprueba la información importante antes de tomar decisiones.
+        </p>
 
     <!-- Font Awesome para iconos -->
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
