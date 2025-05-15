@@ -612,7 +612,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <label class="checkbox-container">
                         <input type="checkbox" id="terms" required>
                         <span class="checkmark"></span>
-                        Acepto los <a href="javascript:void(0)" id="showTerms">términos y condiciones</a>
+                        Acepto los <a href="#termsModal" id="showTerms">términos y condiciones</a>
                         </label>
                     </div>
                         
@@ -639,9 +639,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <span id="closeTerms" class="close">&times;</span>
                 <h2>Términos y Condiciones de CheckNews</h2>
                 <div class="terms-text">
-                <p>Bienvenido a nuestra plataforma. Antes de continuar, por favor lee atentamente estos términos...</p>
-                Bienvenido a CheckNews, un sistema automatizado diseñado para detectar noticias falsas sobre salud utilizando Machine Learning y Procesamiento del Lenguaje Natural (NLP). Al acceder y utilizar nuestra plataforma web, usted acepta cumplir y estar sujeto a los siguientes términos y condiciones de uso. Si no está de acuerdo con estos términos, no debe utilizar CheckNews.
-
+                <p>Bienvenido a CheckNews, un sistema automatizado diseñado para detectar noticias falsas sobre salud utilizando Machine Learning y Procesamiento del Lenguaje Natural (NLP). Al acceder y utilizar nuestra plataforma web, usted acepta cumplir y estar sujeto a los siguientes términos y condiciones de uso. Si no está de acuerdo con estos términos, no debe utilizar CheckNews.</p>
+                
                 1. Descripción del Servicio
                 CheckNews es una herramienta que permite a los usuarios verificar la autenticidad de noticias relacionadas con la salud mediante el análisis automatizado de texto o enlaces.  El sistema utiliza algoritmos de Machine Learning y Procesamiento del Lenguaje Natural para clasificar las noticias   y consulta una base de datos de noticias previamente verificadas.  Los usuarios también pueden consultar el historial de noticias verificadas almacenadas en la base de datos.
 
