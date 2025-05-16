@@ -46,8 +46,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['comentario'])) {
     // Validar duplicado
     $chk = $connection->prepare("
       SELECT 1 FROM reportes_noticias_falsas
-       WHERE usuario_id = ? AND noticia_texto = ?
-       LIMIT 1
+        WHERE usuario_id = ? AND noticia_texto = ?
+      LIMIT 1
     ");
     $chk->bind_param("is", $usuario_id, $noticia_texto);
     $chk->execute();
@@ -116,41 +116,42 @@ elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['comentario']) &&
 
     body {
         display: flex;
+        flex-direction: column;
         min-height: 100vh;
         background-color: #f8f9fa;
     }
 
-    /* Barra lateral */
+    /* Barra lateral - Mobile First */
     .sidebar {
-        width: 20%;
-        max-width: 250px;
+        width: 100%;
         background-color: #2c3e50;
         color: #ecf0f1;
-        padding: 2rem 1rem;
+        padding: 1.5rem 1rem;
         display: flex;
         flex-direction: column;
         align-items: center;
-        box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        order: 2; /* Móvil: sidebar después del contenido */
     }
 
     .logo-container {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
 
-        .logo-container img {
-            width: 90px;
-            height: 90px;
-            object-fit: cover;
-            margin-bottom: 1rem;
-            border-radius: 50%;
-            border: 3px solid #3498db;
-        }
+    .logo-container img {
+        width: 70px;
+        height: 70px;
+        object-fit: cover;
+        margin-bottom: 0.8rem;
+        border-radius: 50%;
+        border: 2px solid #3498db;
+    }
 
     .sidebar h2 {
-        font-size: 1.5rem;
+        font-size: 1.2rem;
         color: #ecf0f1;
-        margin-bottom: 2rem;
+        margin-bottom: 1.5rem;
         font-weight: 600;
     }
 
@@ -160,18 +161,18 @@ elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['comentario']) &&
     }
 
     .sidebar ul li {
-        margin: 1rem 0;
+        margin: 0.8rem 0;
     }
 
     .sidebar ul li a {
         display: flex;
         align-items: center;
-        gap: 0.8rem;
+        gap: 0.6rem;
         text-decoration: none;
         color: #bdc3c7;
-        font-size: 1rem;
-        padding: 0.8rem 1rem;
-        border-radius: 0.75rem; /* 2xl */
+        font-size: 0.9rem;
+        padding: 0.6rem 0.8rem;
+        border-radius: 0.75rem;
         transition: all 0.3s ease;
     }
 
@@ -185,108 +186,103 @@ elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['comentario']) &&
     /* Contenido principal */
     .content,
     .menu-contenido {
-        margin-left: 20%;
-        width: 80%;
-        padding: 2.5rem;
+        width: 100%;
+        padding: 1.5rem;
         background-color: #f8f9fa;
-    }
-
-    @media (max-width: 768px) {
-        .sidebar {
-            width: 100%;
-            position: relative;
-            height: auto;
-        }
-        .content, .menu-contenido {
-            margin-left: 0;
-            width: 100%;
-        }
+        order: 1; /* Móvil: contenido primero */
     }
 
     /* User Info */
     .user-info {
         display: flex;
-        justify-content: flex-end;
+        justify-content: space-between;
         align-items: center;
-        gap: 1rem;
+        gap: 0.8rem;
         text-align: right;
-        margin-bottom: 2rem;
-        font-size: 1rem;
+        margin-bottom: 1.5rem;
+        font-size: 0.9rem;
         color: #7f8c8d;
+        flex-wrap: wrap;
     }
+    
     .user-info .welcome {
         font-weight: 500;
         color: #2c3e50;
     }
+    
     .user-info a {
         color: #3498db;
         text-decoration: none;
-        padding: 0.5rem 1rem;
+        padding: 0.4rem 0.8rem;
         border: 1px solid #3498db;
-        border-radius: 1.25rem; /* 2xl */
+        border-radius: 1.25rem;
         transition: all 0.3s ease;
+        font-size: 0.85rem;
     }
+    
     .user-info a:hover {
         background-color: #3498db;
         color: white;
     }
 
-    /* Form Container (equivalente a search-container / form-container) */
+    /* Form Container */
     .form-container,
     .search-container {
         background-color: white;
-        padding: 2rem;
-        border-radius: 1.5rem; /* xl */
-        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        margin-bottom: 2rem;
-        max-width: 800px;
-        margin-left: auto;
-        margin-right: auto;
+        padding: 1.5rem;
+        border-radius: 1rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        margin-bottom: 1.5rem;
+        width: 100%;
     }
 
     .form-title,
     .search-container h2 {
         color: #2c3e50;
-        font-size: 1.5rem;
-        margin-bottom: 1.5rem;
+        font-size: 1.2rem;
+        margin-bottom: 1.2rem;
         font-weight: 600;
     }
+    
     .search-container p {
         color: #7f8c8d;
-        font-size: 0.9rem;
+        font-size: 0.85rem;
     }
 
     /* Inputs y botones */
     .form-group,
     .search-bar {
         display: flex;
-        gap: 1rem;
-        margin-bottom: 1rem;
+        flex-direction: column;
+        gap: 0.8rem;
+        margin-bottom: 0.8rem;
     }
 
     .form-control,
     .search-bar input {
-        flex: 1;
-        padding: 1rem;
-        font-size: 1rem;
-        border: 2px solid #e0e0e0;
-        border-radius: 0.5rem; /* md */
+        width: 100%;
+        padding: 0.8rem;
+        font-size: 0.9rem;
+        border: 1px solid #e0e0e0;
+        border-radius: 0.5rem;
         transition: all 0.3s ease;
         outline: none;
     }
+    
     .form-control:focus,
     .search-bar input:focus {
         border-color: #3498db;
-        box-shadow: 0 0 0 3px rgba(52,152,219,0.2);
+        box-shadow: 0 0 0 2px rgba(52,152,219,0.2);
     }
 
     .btn-primary,
     .search-bar button {
         display: flex;
         align-items: center;
-        gap: 0.5rem;
-        padding: 1rem 2rem;
-        font-size: 1rem;
+        justify-content: center;
+        gap: 0.4rem;
+        padding: 0.8rem;
+        font-size: 0.9rem;
         font-weight: 600;
         border: none;
         border-radius: 0.5rem;
@@ -294,35 +290,117 @@ elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['comentario']) &&
         transition: all 0.3s ease;
         background-color: #3498db;
         color: white;
+        width: 100%;
     }
+    
     .btn-primary:hover,
     .search-bar button:hover {
         background-color: #2980b9;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
-    .btn-primary:active,
-    .search-bar button:active {
-        transform: translateY(0);
+        transform: translateY(-1px);
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
 
     /* Alertas */
     .alert {
-        padding: 1rem;
-        margin-bottom: 1.5rem;
+        padding: 0.8rem;
+        margin-bottom: 1.2rem;
         border-radius: 0.5rem;
+        font-size: 0.9rem;
     }
+    
     .alert-success {
         background-color: #d4edda;
         color: #155724;
         border: 1px solid #c3e6cb;
     }
+    
     .alert-error {
         background-color: #f8d7da;
         color: #721c24;
         border: 1px solid #f5c6cb;
     }
-    </style>
+
+    /* Tablet Styles */
+    @media (min-width: 768px) {
+        body {
+            flex-direction: row;
+        }
+        
+        .sidebar {
+            width: 35%;
+            max-width: 250px;
+            order: 1;
+            padding: 1.5rem 1rem;
+        }
+        
+        .content,
+        .menu-contenido {
+            width: 65%;
+            padding: 2rem;
+            margin-left: 35%;
+        }
+        
+        .user-info {
+            justify-content: flex-end;
+            font-size: 1rem;
+        }
+        
+        .user-info a {
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+        }
+        
+        .form-group,
+        .search-bar {
+            flex-direction: row;
+        }
+        
+        .btn-primary,
+        .search-bar button {
+            width: auto;
+        }
+    }
+
+    /* Desktop Styles */
+    @media (min-width: 1024px) {
+        .sidebar {
+            width: 20%;
+            padding: 2rem 1rem;
+        }
+        
+        .content,
+        .menu-contenido {
+            width: 80%;
+            padding: 2.5rem;
+            margin-left: 20%;
+        }
+        
+        .logo-container img {
+            width: 90px;
+            height: 90px;
+        }
+        
+        .sidebar h2 {
+            font-size: 1.5rem;
+        }
+        
+        .sidebar ul li a {
+            font-size: 1rem;
+            padding: 0.8rem 1rem;
+        }
+        
+        .form-container,
+        .search-container {
+            padding: 2rem;
+            border-radius: 1.5rem;
+        }
+        
+        .form-title,
+        .search-container h2 {
+            font-size: 1.5rem;
+        }
+    }
+</style>
 
 </head>
 <body>
@@ -376,7 +454,7 @@ elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['comentario']) &&
 
         <!-- Hidden: para capturar el resultado -->
         <input type="hidden" name="resultado"
-               value="<?php echo $prefill_resultado; ?>">
+              value="<?php echo $prefill_resultado; ?>">
         <!-- Hidden: para distinguir prefill (no hace falta aquí, ya lo procesamos) -->
         <input type="hidden" name="action" value="">
 
