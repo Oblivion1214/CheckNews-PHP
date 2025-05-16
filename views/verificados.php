@@ -28,7 +28,7 @@ $sql  = "
   SELECT r.*, u.nombre, u.apellido_paterno
     FROM reportes_noticias_falsas AS r
     JOIN usuarios AS u ON u.id = r.usuario_id
-   WHERE r.estatus = 'revisado'
+  WHERE r.estatus = 'revisado'
 ";
 $types = "";
 $params = [];
@@ -74,88 +74,325 @@ $result = $stmt->get_result();
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <style>
     * {
-      margin: 0; padding: 0; box-sizing: border-box;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0; 
+        padding: 0; 
+        box-sizing: border-box;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
-    body { display: flex; min-height:100vh; background:#f8f9fa; }
+    
+    body { 
+        display: flex; 
+        flex-direction: column;
+        min-height: 100vh; 
+        background: #f8f9fa; 
+    }
 
-    /* Sidebar */
+    /* Sidebar - Mobile First */
     .sidebar {
-      width:20%; background:#2c3e50; color:#ecf0f1;
-      padding:2rem 1rem; display:flex; flex-direction:column;
-      align-items:center;
+        width: 100%; 
+        background: #2c3e50; 
+        color: #ecf0f1;
+        padding: 1.5rem 1rem; 
+        display: flex; 
+        flex-direction: column;
+        align-items: center;
+        order: 2; /* Móvil: sidebar después del contenido */
     }
-    .logo-container { text-align:center; margin-bottom:2rem; }
+    
+    .logo-container { 
+        text-align: center; 
+        margin-bottom: 1.5rem; 
+    }
+    
     .logo-container img {
-      width:90px; height:90px; object-fit:cover;
-      margin-bottom:1rem; border-radius:50%; border:3px solid #3498db;
+        width: 70px; 
+        height: 70px; 
+        object-fit: cover;
+        margin-bottom: 0.8rem; 
+        border-radius: 50%; 
+        border: 2px solid #3498db;
     }
-    .sidebar h2 { font-size:1.5rem; font-weight:600; }
-    .sidebar ul { list-style:none; width:100%; margin-top:2rem; }
-    .sidebar ul li { margin:1rem 0; }
+    
+    .sidebar h2 { 
+        font-size: 1.2rem; 
+        font-weight: 600; 
+    }
+    
+    .sidebar ul { 
+        list-style: none; 
+        width: 100%; 
+        margin-top: 1.5rem; 
+    }
+    
+    .sidebar ul li { 
+        margin: 0.8rem 0; 
+    }
+    
     .sidebar ul li a {
-      text-decoration:none; color:#bdc3c7;
-      font-size:1rem; padding:0.8rem 1rem;
-      border-radius:6px; transition:all .3s;
-      display:flex; align-items:center; gap:.8rem;
+        text-decoration: none; 
+        color: #bdc3c7;
+        font-size: 0.9rem; 
+        padding: 0.6rem 0.8rem;
+        border-radius: 6px; 
+        transition: all 0.3s;
+        display: flex; 
+        align-items: center; 
+        gap: 0.6rem;
     }
-    .sidebar ul li a:hover { background:#34495e; color:#ecf0f1; transform:translateX(5px); }
-    .sidebar ul li a.active { background:#3498db; color:white; }
+    
+    .sidebar ul li a:hover { 
+        background: #34495e; 
+        color: #ecf0f1; 
+        transform: translateX(5px); 
+    }
+    
+    .sidebar ul li a.active { 
+        background: #3498db; 
+        color: white; 
+    }
 
-    /* Main */
+    /* Main Content */
     .menu-contenido {
-      width:80%; padding:2.5rem; background:#f8f9fa;
+        width: 100%; 
+        padding: 1.5rem; 
+        background: #f8f9fa;
+        order: 1; /* Móvil: contenido primero */
     }
+    
     .user-info {
-      display:flex; justify-content:flex-end; align-items:center; gap:1rem;
-      text-align:right; margin-bottom:2rem; font-size:1rem; color:#7f8c8d;
+        display: flex; 
+        justify-content: space-between; 
+        align-items: center; 
+        gap: 0.8rem;
+        text-align: right; 
+        margin-bottom: 1.5rem; 
+        font-size: 0.9rem; 
+        color: #7f8c8d;
+        flex-wrap: wrap;
     }
-    .user-info .welcome { font-weight:500; color:#2c3e50; }
+    
+    .user-info .welcome { 
+        font-weight: 500; 
+        color: #2c3e50; 
+    }
+    
     .user-info a {
-      color:#3498db; text-decoration:none;
-      padding:.5rem 1rem; border:1px solid #3498db; border-radius:20px;
-      transition:all .3s;
+        color: #3498db; 
+        text-decoration: none;
+        padding: 0.4rem 0.8rem; 
+        border: 1px solid #3498db; 
+        border-radius: 20px;
+        transition: all 0.3s;
+        font-size: 0.85rem;
     }
-    .user-info a:hover { background:#3498db; color:white; }
+    
+    .user-info a:hover { 
+        background: #3498db; 
+        color: white; 
+    }
 
-    /* Búsqueda / filtros */
+    /* Filters */
     .filters {
-      display:flex; flex-wrap:wrap; gap:1rem;
-      margin-bottom:2rem; background:#fff; padding:1rem;
-      border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.08);
+        display: flex; 
+        flex-direction: column;
+        gap: 0.8rem;
+        margin-bottom: 1.5rem; 
+        background: #fff; 
+        padding: 1.2rem;
+        border-radius: 10px; 
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     }
-    .filters input, .filters select {
-      padding:.8rem; border:2px solid #e0e0e0; border-radius:8px;
-      transition:all .3s; outline:none;
+    
+    .filters input, 
+    .filters select {
+        padding: 0.8rem; 
+        border: 1px solid #e0e0e0; 
+        border-radius: 6px;
+        transition: all 0.3s; 
+        outline: none;
+        width: 100%;
     }
-    .filters select { background:white; }
-    .filters input:focus, .filters select:focus {
-      border-color:#3498db; box-shadow:0 0 0 3px rgba(52,152,219,0.2);
+    
+    .filters select { 
+        background: white; 
     }
+    
+    .filters input:focus, 
+    .filters select:focus {
+        border-color: #3498db; 
+        box-shadow: 0 0 0 2px rgba(52,152,219,0.2);
+    }
+    
     .filters button {
-      padding:1rem 2rem; background:#3498db; color:white;
-      border:none; border-radius:8px; font-weight:600; cursor:pointer;
-      display:flex; align-items:center; gap:.5rem;
-      transition:all .3s;
+        padding: 0.8rem; 
+        background: #3498db; 
+        color: white;
+        border: none; 
+        border-radius: 6px; 
+        font-weight: 600; 
+        cursor: pointer;
+        display: flex; 
+        align-items: center; 
+        justify-content: center;
+        gap: 0.5rem;
+        transition: all 0.3s;
+        width: 100%;
     }
-    .filters button:hover { background:#2980b9; transform:translateY(-2px); }
+    
+    .filters button:hover { 
+        background: #2980b9; 
+        transform: translateY(-1px); 
+    }
 
-    /* Resultados */
-    .results h2 { margin-bottom:1.5rem; color:#2c3e50; }
+    /* Results */
+    .results h2 { 
+        margin-bottom: 1.2rem; 
+        color: #2c3e50; 
+        font-size: 1.3rem;
+    }
+    
     .result-item {
-      background:white; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.08);
-      padding:2rem; margin-bottom:1.5rem;
+        background: white; 
+        border-radius: 10px; 
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        padding: 1.2rem; 
+        margin-bottom: 1.2rem;
     }
-    .result-item h3 { font-size:1.2rem; margin-bottom:.5rem; color:#2c3e50; }
-    .result-item p { margin-bottom:.5rem; color:#7f8c8d; }
+    
+    .result-item h3 { 
+        font-size: 1.1rem; 
+        margin-bottom: 0.5rem; 
+        color: #2c3e50; 
+    }
+    
+    .result-item p { 
+        margin-bottom: 0.5rem; 
+        color: #7f8c8d; 
+        font-size: 0.9rem;
+    }
+    
     .result-meta {
-      display:flex; justify-content:space-between; font-size:.9rem; color:#7f8c8d;
-      margin-top:1rem;
+        display: flex; 
+        flex-wrap: wrap;
+        justify-content: space-between; 
+        font-size: 0.8rem; 
+        color: #7f8c8d;
+        margin-top: 1rem;
+        gap: 0.5rem;
     }
-    .result-user { font-style:italic; }
+    
+    .result-user { 
+        font-style: italic; 
+    }
+    
     .result-date { }
-    .result-category { font-weight:600; color:#3498db; }
-  </style>
+    
+    .result-category { 
+        font-weight: 600; 
+        color: #3498db; 
+    }
+
+    /* Tablet Styles */
+    @media (min-width: 768px) {
+        body {
+            flex-direction: row;
+        }
+        
+        .sidebar {
+            width: 35%;
+            order: 1;
+            padding: 1.5rem 1rem;
+        }
+        
+        .menu-contenido {
+            width: 65%;
+            order: 2;
+            padding: 2rem;
+        }
+        
+        .filters {
+            flex-direction: row;
+            flex-wrap: wrap;
+        }
+        
+        .filters input,
+        .filters select {
+            flex: 1;
+            min-width: 150px;
+        }
+        
+        .filters button {
+            width: auto;
+            padding: 0.8rem 1.5rem;
+        }
+        
+        .user-info {
+            justify-content: flex-end;
+            font-size: 1rem;
+        }
+        
+        .user-info a {
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+        }
+    }
+
+    /* Desktop Styles */
+    @media (min-width: 1024px) {
+        .sidebar {
+            width: 20%;
+            padding: 2rem 1rem;
+        }
+        
+        .menu-contenido {
+            width: 80%;
+            padding: 2.5rem;
+        }
+        
+        .logo-container img {
+            width: 90px;
+            height: 90px;
+        }
+        
+        .sidebar h2 {
+            font-size: 1.5rem;
+        }
+        
+        .sidebar ul li a {
+            font-size: 1rem;
+            padding: 0.8rem 1rem;
+        }
+        
+        .filters {
+            padding: 1.5rem;
+        }
+        
+        .filters input,
+        .filters select {
+            padding: 1rem;
+        }
+        
+        .filters button {
+            padding: 1rem 2rem;
+        }
+        
+        .results h2 {
+            font-size: 1.5rem;
+        }
+        
+        .result-item {
+            padding: 1.5rem;
+        }
+        
+        .result-item h3 {
+            font-size: 1.2rem;
+        }
+        
+        .result-meta {
+            font-size: 0.9rem;
+        }
+    }
+</style>
 </head>
 <body>
   <div class="sidebar">
