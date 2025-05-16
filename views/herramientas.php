@@ -67,12 +67,12 @@ if ($result->num_rows > 0) {
             margin-bottom: 1.5rem;
         }
 
-        .logo {
-            width: 70px;
-            height: 70px;
+        .logo-container img {
+            width: 70px; 
+            height: 70px; 
             object-fit: cover;
-            margin-bottom: 0.8rem;
-            border-radius: 50%;
+            margin-bottom: 0.8rem; 
+            border-radius: 50%; 
             border: 2px solid #3498db;
         }
 
