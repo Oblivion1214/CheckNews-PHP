@@ -530,7 +530,7 @@ if ($result->num_rows > 0) {
             
             <div class="guide-section">
                 <h2><i class="fas fa-external-link-alt"></i> Recursos Adicionales</h2>
-                <p>Explora estas herramientas profesionales de verificación de hechos:</p>
+                <p>Explora estas herramientas profesionales de verificación manual de hechos:</p>
                 
                 <div class="resources-list">
                     <div class="resource-card">
