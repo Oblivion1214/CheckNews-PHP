@@ -499,7 +499,7 @@ if ($result->num_rows > 0) {
         <!-- Barra de búsqueda -->
         <div class="search-container">
             <h2 style="margin-bottom: 1.5rem; color: #2c3e50;">Verificador de Noticias Medicas en Español</h2>
-                <p style="color: #7f8c8d; font-size: 0.9rem;">Actualmente el modelo solo cuenta con el soporte de deteccion para las siguientes noticias:
+                <p style="color: #7f8c8d; font-size: 0.9rem;">Actualmente el modelo de IA solo cuenta con el soporte de deteccion para las siguientes noticias:
                     Cáncer, Diabetes, Asma, Hipertensión, Obesidad, Enfermedades cardiovasculares
                     
                 </p>
@@ -522,7 +522,7 @@ if ($result->num_rows > 0) {
             
             <div class="result-meta">
                 <div id="confidenceBadge" class="confidence-badge">
-                    Porcentaje de confianza del modelo: <span id="confidenceValue">0</span>
+                    Porcentaje de confianza del modelo IA: <span id="confidenceValue">0</span>
                 </div>
                 <p id="confidenceExplanation" class="confidence-explanation" style="display: none;"></p>
             </div>
@@ -553,6 +553,13 @@ if ($result->num_rows > 0) {
         <!-- Estado de carga -->
         <div id="loadingState" class="loading" style="display: none;">
             <div class="spinner"></div>
+            <div style="margin-left: 1rem;">
+            <p id="loadingText" style="color: #7f8c8d;">Verificando...</p>
+            <div style="width: 180px; background: #e0e0e0; border-radius: 8px; height: 10px; margin-top: 0.5rem; overflow: hidden;">
+                <div id="loadingBar" style="height: 100%; width: 0%; background: #3498db; transition: width 0.3s;"></div>
+            </div>
+            <span id="loadingPercent" style="font-size: 0.9rem; color: #3498db;">0%</span>
+            </div>
         </div>
         
         <p style="text-align:center; color:#e67e22; margin-top: 2rem; font-size: 0.95rem;">

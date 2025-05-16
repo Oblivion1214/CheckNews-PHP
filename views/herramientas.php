@@ -449,7 +449,7 @@ if ($result->num_rows > 0) {
 
         <div class="guide-container">
             <h1>Centro de Ayuda y Herramientas</h1>
-            
+            <p>Recuerda que CheckNews aun sigue en desarrollo por lo que los temas de verificacion son limitados a español y unos cuantos sectores</p>
             <div class="guide-section">
                 <h2><i class="fas fa-search"></i> Cómo Verificar Noticias</h2>
                 
