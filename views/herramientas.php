@@ -534,22 +534,22 @@ if ($result->num_rows > 0) {
                 
                 <div class="resources-list">
                     <div class="resource-card">
-                        <h3>Maldita.es</h3>
-                        <a href="https://es.maldita.es/" target="_blank">
+                        <h3>Pubmed.gov</h3>
+                        <a href="https://pubmed.ncbi.nlm.nih.gov/" target="_blank">
                             <i class="fas fa-external-link-alt"></i> Visitar sitio web
                         </a>
                     </div>
                     
                     <div class="resource-card">
-                        <h3>Chequeado</h3>
-                        <a href="https://chequeado.com/" target="_blank">
+                        <h3>Unam.mx</h3>
+                        <a href="https://www.bidi.unam.mx/index.php/colecciones-digitales/bases-de-datos/ciencias-biologicas-quimicas-y-de-la-salud" target="_blank">
                             <i class="fas fa-external-link-alt"></i> Visitar sitio web
                         </a>
                     </div>
                     
                     <div class="resource-card">
-                        <h3>FactCheck.org</h3>
-                        <a href="https://www.factcheck.org/" target="_blank">
+                        <h3>Tripdatabase.com</h3>
+                        <a href="https://www.tripdatabase.com/" target="_blank">
                             <i class="fas fa-external-link-alt"></i> Visitar sitio web
                         </a>
                     </div>
