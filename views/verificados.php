@@ -285,7 +285,13 @@ $result = $stmt->get_result();
         font-style: italic; 
     }
     
-    .result-date { }
+    .result-date { 
+      font-size: 14px;
+      color: #333;
+      font-weight: bold;
+      margin-top: 10px;
+      display: inline-block;
+    }
     
     .result-category { 
         font-weight: 600; 
