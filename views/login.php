@@ -458,6 +458,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <div class="error-message" id="password-error"></div>
                     </div>
 
+                    <!--
                     <div class="options">
                         <label class="remember">
                             <input type="checkbox" name="remember">
@@ -466,6 +467,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         </label>
                         <a href="forgot-password.php" class="forgot">¿Olvidaste tu contraseña?</a>
                     </div>
+                    -->
 
                     <button type="submit" class="login-btn">
                         <span>Iniciar sesión</span>
